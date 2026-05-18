@@ -15,40 +15,42 @@
   --border:#d4e4db;--shadow:0 2px 12px rgba(26,71,49,.08);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'Source Sans 3',sans-serif;min-height:100vh}
+body{background:var(--bg);color:var(--text);font-family:'Source Sans 3',sans-serif;min-height:100vh;padding-top:var(--fixed-top);padding-bottom:52px}
+
+/* ── FIXED HEADER WRAPPER ── */
+.fixed-top{position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 2px 16px rgba(26,71,49,.18)}
 
 /* ── TOP BAR ── */
-.top-bar{background:var(--green-dark);padding:8px 32px;display:flex;align-items:center;justify-content:space-between}
-.top-bar-left{display:flex;align-items:center;gap:12px}
-.top-bar-logo{width:36px;height:36px;background:var(--white);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--green-dark)}
-.top-bar-text{color:rgba(255,255,255,.85);font-size:12px;letter-spacing:.3px}
-.top-bar-text strong{color:#fff;display:block;font-size:13px}
-.top-bar-right{color:rgba(255,255,255,.6);font-size:11px;font-family:'DM Mono',monospace}
+.top-bar{background:var(--green-dark);padding:5px 32px;display:flex;align-items:center;justify-content:space-between}
+.top-bar-left{display:flex;align-items:center;gap:10px}
+.top-bar-logo{width:28px;height:28px;background:var(--white);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--green-dark)}
+.top-bar-text{color:rgba(255,255,255,.85);font-size:11px;letter-spacing:.3px}
+.top-bar-text strong{color:#fff;display:inline;font-size:11px;margin-right:4px}
+.top-bar-right{color:rgba(255,255,255,.6);font-size:10px;font-family:'DM Mono',monospace}
 
-/* ── HEADER ── */
-header{background:linear-gradient(135deg,var(--green-dark) 0%,var(--green-mid) 100%);padding:40px 32px 36px;position:relative;overflow:hidden}
-header::after{content:'';position:absolute;right:-60px;top:-60px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
-header::before{content:'';position:absolute;right:80px;bottom:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.03);pointer-events:none}
-.header-inner{max-width:1140px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:20px;position:relative;z-index:1}
-.header-left{}
-.header-authority{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:8px;font-family:'DM Mono',monospace}
-.header-title{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,46px);color:#fff;line-height:1.1;margin-bottom:10px}
+/* ── HEADER (compact) ── */
+header{background:linear-gradient(135deg,var(--green-dark) 0%,var(--green-mid) 100%);padding:10px 32px 10px;position:relative;overflow:hidden}
+header::after{content:'';position:absolute;right:-60px;top:-30px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
+.header-inner{max-width:1140px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;position:relative;z-index:1}
+.header-left{display:flex;align-items:center;gap:20px}
+.header-authority{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.65);font-family:'DM Mono',monospace;margin-bottom:2px}
+.header-title{font-family:'Playfair Display',serif;font-size:clamp(20px,2.5vw,28px);color:#fff;line-height:1.1}
 .header-title span{color:#f5e9c4}
-.header-sub{font-size:13px;color:rgba(255,255,255,.65);letter-spacing:.5px}
-.header-stats{display:flex;gap:24px;flex-wrap:wrap}
-.hstat{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:12px 20px;text-align:center;min-width:90px}
-.hstat-num{font-family:'Playfair Display',serif;font-size:26px;color:#fff;line-height:1}
-.hstat-lbl{font-size:10px;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px}
+.header-sub{font-size:11px;color:rgba(255,255,255,.6);letter-spacing:.4px;margin-top:1px}
+.header-stats{display:flex;gap:10px;flex-wrap:wrap}
+.hstat{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:6px 14px;text-align:center;min-width:70px}
+.hstat-num{font-family:'DM Mono',monospace;font-size:18px;color:#fff;line-height:1;font-weight:600}
+.hstat-lbl{font-size:9px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:1.5px;margin-top:2px}
 
 /* ── NAV TABS ── */
-.nav-wrap{background:var(--white);border-bottom:2px solid var(--border);box-shadow:var(--shadow)}
+.nav-wrap{background:var(--white);border-bottom:2px solid var(--border)}
 .nav-inner{max-width:1140px;margin:0 auto;display:flex;padding:0 32px}
-.tab{padding:16px 24px;font-size:14px;font-weight:500;color:var(--text-dim);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;letter-spacing:.2px;white-space:nowrap}
+.tab{padding:10px 22px;font-size:13px;font-weight:500;color:var(--text-dim);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;letter-spacing:.2px;white-space:nowrap}
 .tab:hover{color:var(--green-mid)}
 .tab.active{color:var(--green-dark);border-bottom-color:var(--green-mid);font-weight:600}
 
 /* ── MAIN ── */
-.main{max-width:1140px;margin:0 auto;padding:32px}
+.main{max-width:1140px;margin:0 auto;padding:28px 32px 20px}
 .panel{display:none}
 .panel.active{display:block}
 
@@ -89,7 +91,7 @@ tfoot td.td-right{text-align:right}
 .msg{text-align:center;padding:60px 20px;color:var(--text-dim);font-size:14px}
 
 /* ── FOOTER ── */
-footer{background:var(--green-dark);color:rgba(255,255,255,.6);text-align:center;padding:24px;font-size:12px;font-family:'DM Mono',monospace;margin-top:40px}
+footer{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:var(--green-dark);color:rgba(255,255,255,.6);text-align:center;padding:10px 24px;font-size:11px;font-family:'DM Mono',monospace;box-shadow:0 -2px 12px rgba(26,71,49,.15)}
 footer strong{color:#fff}
 
 /* ── RESPONSIVE ── */
@@ -105,6 +107,9 @@ footer strong{color:#fff}
 </style>
 </head>
 <body>
+
+<!-- FIXED TOP -->
+<div class="fixed-top">
 
 <!-- TOP BAR -->
 <div class="top-bar">
@@ -143,6 +148,8 @@ footer strong{color:#fff}
     <div class="tab" onclick="switchTab('luc')">📊 LUC Summary</div>
   </div>
 </div>
+
+</div><!-- /fixed-top -->
 
 <!-- MAIN -->
 <div class="main">
@@ -197,8 +204,7 @@ footer strong{color:#fff}
 </div>
 
 <footer>
-  <strong>Punjab Spatial Planning Authority</strong> — Land Use Plan Dashboard<br>
-  Local Government &amp; Community Development Department, Punjab &nbsp;·&nbsp; PMU-LGCDD
+  <strong>Punjab Spatial Planning Authority</strong> — Land Use Plan &nbsp;·&nbsp; Local Government &amp; Community Development Department, Punjab &nbsp;·&nbsp; PMU-LGCDD
 </footer>
 
 <script>
@@ -303,6 +309,14 @@ function renderLUC(){
 }
 
 renderDistrict(); renderZone(); renderLUC();
+
+// Set body padding to match fixed header height
+function setTopPadding(){
+  const h = document.querySelector('.fixed-top').offsetHeight;
+  document.body.style.paddingTop = h + 'px';
+}
+setTopPadding();
+window.addEventListener('resize', setTopPadding);
 
 </script>
 </body>
