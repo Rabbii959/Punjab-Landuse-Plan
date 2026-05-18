@@ -20,31 +20,31 @@ body{background:var(--bg);color:var(--text);font-family:'Source Sans 3',sans-ser
 /* ── FIXED HEADER WRAPPER ── */
 .fixed-top{position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 2px 16px rgba(26,71,49,.18)}
 
-/* ── TOP BAR ── */
-.top-bar{background:var(--green-dark);padding:5px 32px;display:flex;align-items:center;justify-content:space-between}
-.top-bar-left{display:flex;align-items:center;gap:10px}
-.top-bar-logo{width:28px;height:28px;background:var(--white);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--green-dark)}
-.top-bar-text{color:rgba(255,255,255,.85);font-size:11px;letter-spacing:.3px}
-.top-bar-text strong{color:#fff;display:inline;font-size:11px;margin-right:4px}
-.top-bar-right{color:rgba(255,255,255,.6);font-size:10px;font-family:'DM Mono',monospace}
-
-/* ── HEADER (compact) ── */
-header{background:linear-gradient(135deg,var(--green-dark) 0%,var(--green-mid) 100%);padding:10px 32px 10px;position:relative;overflow:hidden}
+/* ── HEADER (compact, with logos) ── */
+header{background:linear-gradient(135deg,var(--green-dark) 0%,var(--green-mid) 100%);padding:8px 24px;position:relative;overflow:hidden}
 header::after{content:'';position:absolute;right:-60px;top:-30px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
-.header-inner{max-width:1140px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;position:relative;z-index:1}
-.header-left{display:flex;align-items:center;gap:20px}
-.header-authority{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.65);font-family:'DM Mono',monospace;margin-bottom:2px}
-.header-title{font-family:'Playfair Display',serif;font-size:clamp(20px,2.5vw,28px);color:#fff;line-height:1.1}
+.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;position:relative;z-index:1}
+
+/* Logos */
+.header-logo{height:64px;width:auto;object-fit:contain;flex-shrink:0}
+
+/* Centre block */
+.header-centre{flex:1;display:flex;align-items:center;justify-content:center;gap:20px;text-align:left}
+.header-text-block{}
+.header-authority{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.65);font-family:'DM Mono',monospace;margin-bottom:2px}
+.header-title{font-family:'Playfair Display',serif;font-size:clamp(18px,2vw,26px);color:#fff;line-height:1.1}
 .header-title span{color:#f5e9c4}
-.header-sub{font-size:11px;color:rgba(255,255,255,.6);letter-spacing:.4px;margin-top:1px}
-.header-stats{display:flex;gap:10px;flex-wrap:wrap}
-.hstat{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:6px 14px;text-align:center;min-width:70px}
-.hstat-num{font-family:'DM Mono',monospace;font-size:18px;color:#fff;line-height:1;font-weight:600}
-.hstat-lbl{font-size:9px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:1.5px;margin-top:2px}
+.header-sub{font-size:10px;color:rgba(255,255,255,.55);letter-spacing:.4px;margin-top:1px}
+
+/* Stats */
+.header-stats{display:flex;gap:8px;flex-shrink:0}
+.hstat{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:5px 12px;text-align:center;min-width:60px}
+.hstat-num{font-family:'DM Mono',monospace;font-size:16px;color:#fff;line-height:1;font-weight:600}
+.hstat-lbl{font-size:8px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:1.2px;margin-top:2px}
 
 /* ── NAV TABS ── */
 .nav-wrap{background:var(--white);border-bottom:2px solid var(--border)}
-.nav-inner{max-width:1140px;margin:0 auto;display:flex;padding:0 32px}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;padding:0 24px}
 .tab{padding:10px 22px;font-size:13px;font-weight:500;color:var(--text-dim);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;letter-spacing:.2px;white-space:nowrap}
 .tab:hover{color:var(--green-mid)}
 .tab.active{color:var(--green-dark);border-bottom-color:var(--green-mid);font-weight:600}
@@ -97,12 +97,11 @@ footer strong{color:#fff}
 /* ── RESPONSIVE ── */
 @media(max-width:640px){
   .stats-row{grid-template-columns:1fr 1fr}
-  .header-stats{gap:12px}
-  .hstat{padding:10px 14px;min-width:70px}
+  .header-stats{display:none}
+  .header-logo{height:44px}
   .main{padding:20px 16px}
   .nav-inner{padding:0 8px}
-  .tab{padding:14px 14px;font-size:13px}
-  .top-bar{padding:8px 16px}
+  .tab{padding:10px 12px;font-size:12px}
 }
 </style>
 </head>
@@ -111,32 +110,29 @@ footer strong{color:#fff}
 <!-- FIXED TOP -->
 <div class="fixed-top">
 
-<!-- TOP BAR -->
-<div class="top-bar">
-  <div class="top-bar-left">
-    <div class="top-bar-logo">🏛</div>
-    <div class="top-bar-text">
-      <strong>Government of Punjab</strong>
-      Local Government &amp; Community Development Department
-    </div>
-  </div>
-  <div class="top-bar-right">PMU-LGCDD</div>
-</div>
-
 <!-- HEADER -->
 <header>
   <div class="header-inner">
-    <div class="header-left">
-      <div class="header-authority">Punjab Spatial Planning Authority</div>
-      <div class="header-title">Land Use <span>Plan</span></div>
-      <div class="header-sub">District-wise Land Use Classification &amp; Zoning — 37 Districts of Punjab</div>
+    <!-- Left Logo: PMU -->
+    <img class="header-logo" src="https://pmu-lgcdd.gop.pk/wp-content/uploads/2025/02/PMU-LOGO-1-150x150.png" alt="PMU Logo" onerror="this.style.display='none'">
+
+    <!-- Centre: title + stats -->
+    <div class="header-centre">
+      <div class="header-text-block">
+        <div class="header-authority">Punjab Spatial Planning Authority</div>
+        <div class="header-title">Land Use <span>Plan</span></div>
+        <div class="header-sub">District-wise Land Use Classification &amp; Zoning — 37 Districts of Punjab</div>
+      </div>
+      <div class="header-stats">
+        <div class="hstat"><div class="hstat-num">37</div><div class="hstat-lbl">Districts</div></div>
+        <div class="hstat"><div class="hstat-num">104</div><div class="hstat-lbl">Zone Types</div></div>
+        <div class="hstat"><div class="hstat-num">61</div><div class="hstat-lbl">LUC Types</div></div>
+        <div class="hstat"><div class="hstat-num">689</div><div class="hstat-lbl">LUP Records</div></div>
+      </div>
     </div>
-    <div class="header-stats">
-      <div class="hstat"><div class="hstat-num">37</div><div class="hstat-lbl">Districts</div></div>
-      <div class="hstat"><div class="hstat-num">104</div><div class="hstat-lbl">Zone Types</div></div>
-      <div class="hstat"><div class="hstat-num">61</div><div class="hstat-lbl">LUC Types</div></div>
-      <div class="hstat"><div class="hstat-num">689</div><div class="hstat-lbl">LUP Records</div></div>
-    </div>
+
+    <!-- Right Logo: Govt of Punjab -->
+    <img class="header-logo" src="https://pmu-lgcdd.gop.pk/wp-content/uploads/2025/02/GOVT-LOGO-1-150x150.png" alt="Govt of Punjab Logo" onerror="this.style.display='none'">
   </div>
 </header>
 
