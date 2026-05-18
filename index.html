@@ -7,525 +7,180 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:        #0d1117;
-    --surface:   #161b22;
-    --surface2:  #1c2330;
-    --border:    #2a3548;
-    --teal:      #3d8b85;
-    --teal-bright:#52b8b1;
-    --teal-glow: rgba(61,139,133,0.18);
-    --accent:    #e8c468;
-    --text:      #cdd9e5;
-    --text-dim:  #768390;
-    --text-head: #adbac7;
-    --red:       #e06c75;
-    --green:     #7ec8a4;
+    --bg:#0d1117;--surface:#161b22;--surface2:#1c2330;--border:#2a3548;
+    --teal:#3d8b85;--teal-bright:#52b8b1;--teal-glow:rgba(61,139,133,0.18);
+    --accent:#e8c468;--text:#cdd9e5;--text-dim:#768390;--text-head:#adbac7;
+    --red:#e06c75;--green:#7ec8a4;
   }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* ── BACKGROUND GRID ── */
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background-image:
-      linear-gradient(var(--border) 1px, transparent 1px),
-      linear-gradient(90deg, var(--border) 1px, transparent 1px);
-    background-size: 40px 40px;
-    opacity: 0.25;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 24px 60px; }
-
-  /* ── HEADER ── */
-  header {
-    padding: 48px 0 36px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 40px;
-  }
-  .header-inner { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-  .logo-block {}
-  .logo-label {
-    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
-    color: var(--teal-bright); margin-bottom: 6px;
-    font-family: 'DM Mono', monospace;
-  }
-  h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(36px, 5vw, 58px);
-    line-height: 1;
-    color: #fff;
-    letter-spacing: 1px;
-  }
-  h1 span { color: var(--teal-bright); }
-  .header-meta {
-    font-size: 12px; color: var(--text-dim); font-family: 'DM Mono', monospace;
-    text-align: right;
-  }
-  .data-badge {
-    display: inline-block;
-    background: var(--teal-glow);
-    border: 1px solid var(--teal);
-    color: var(--teal-bright);
-    font-size: 11px; padding: 4px 10px; border-radius: 4px;
-    font-family: 'DM Mono', monospace; letter-spacing: 1px;
-    margin-top: 8px;
-  }
-  #status-dot {
-    display: inline-block; width: 7px; height: 7px;
-    border-radius: 50%; background: var(--text-dim);
-    margin-right: 6px; vertical-align: middle;
-    transition: background .3s;
-  }
-  #status-dot.live { background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite; }
-  #status-dot.error { background: var(--red); }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-
-  /* ── TABS ── */
-  .tabs { display: flex; gap: 4px; margin-bottom: 32px; }
-  .tab {
-    padding: 10px 24px; border-radius: 6px 6px 0 0;
-    border: 1px solid var(--border); border-bottom: none;
-    background: var(--surface); color: var(--text-dim);
-    cursor: pointer; font-family: 'DM Sans', sans-serif;
-    font-size: 14px; font-weight: 500;
-    transition: all .2s; letter-spacing: .3px;
-  }
-  .tab:hover { color: var(--text); background: var(--surface2); }
-  .tab.active {
-    background: var(--surface2); color: var(--teal-bright);
-    border-color: var(--teal); border-bottom: 1px solid var(--surface2);
-    position: relative; top: 1px;
-  }
-
-  /* ── PANELS ── */
-  .panel { display: none; }
-  .panel.active { display: block; }
-
-  .panel-card {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 0 8px 8px 8px;
-    padding: 28px;
-  }
-
-  /* ── CONTROLS ── */
-  .controls {
-    display: flex; align-items: center; gap: 16px;
-    flex-wrap: wrap; margin-bottom: 28px;
-  }
-  .control-label {
-    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-    color: var(--teal-bright); font-family: 'DM Mono', monospace;
-    white-space: nowrap;
-  }
-  select {
-    background: var(--bg);
-    color: var(--text);
-    border: 1px solid var(--teal);
-    border-radius: 6px;
-    padding: 10px 36px 10px 14px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px; font-weight: 500;
-    min-width: 240px;
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2352b8b1' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    outline: none;
-    transition: border-color .2s, box-shadow .2s;
-  }
-  select:focus { border-color: var(--teal-bright); box-shadow: 0 0 0 3px var(--teal-glow); }
-
-  /* ── STATS ROW ── */
-  .stats-row {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 12px; margin-bottom: 24px;
-  }
-  .stat-card {
-    background: var(--bg); border: 1px solid var(--border);
-    border-radius: 8px; padding: 16px 20px;
-    transition: border-color .2s;
-  }
-  .stat-card:hover { border-color: var(--teal); }
-  .stat-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); font-family: 'DM Mono', monospace; margin-bottom: 6px; }
-  .stat-value { font-size: 22px; font-weight: 600; color: var(--teal-bright); font-family: 'DM Mono', monospace; }
-  .stat-unit { font-size: 11px; color: var(--text-dim); margin-left: 4px; }
-
-  /* ── TABLE ── */
-  .table-wrap {
-    border: 1px solid var(--border); border-radius: 8px;
-    overflow: hidden; overflow-x: auto;
-  }
-  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-  thead tr { background: var(--bg); }
-  thead th {
-    padding: 12px 16px; text-align: left;
-    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
-    color: var(--teal-bright); font-family: 'DM Mono', monospace;
-    border-bottom: 1px solid var(--border); font-weight: 500;
-  }
-  thead th:not(:first-child) { text-align: right; }
-  tbody tr {
-    border-bottom: 1px solid var(--border);
-    transition: background .15s;
-  }
-  tbody tr:last-child { border-bottom: none; }
-  tbody tr:hover { background: var(--teal-glow); }
-  tbody td { padding: 11px 16px; color: var(--text); }
-  tbody td:not(:first-child) { text-align: right; font-family: 'DM Mono', monospace; font-size: 13px; }
-  tbody td:first-child { color: var(--text-head); font-weight: 500; }
-  tfoot tr { background: var(--bg); border-top: 2px solid var(--teal); }
-  tfoot td {
-    padding: 12px 16px; font-family: 'DM Mono', monospace;
-    font-size: 12px; font-weight: 600; color: var(--accent);
-  }
-  tfoot td:not(:first-child) { text-align: right; }
-
-  /* row index */
-  .row-num { color: var(--text-dim) !important; font-size: 11px !important; font-family: 'DM Mono', monospace; width: 40px; }
-
-  /* ── EMPTY / LOADING / ERROR ── */
-  .msg {
-    text-align: center; padding: 60px 20px;
-    color: var(--text-dim); font-size: 14px;
-  }
-  .msg .icon { font-size: 32px; margin-bottom: 12px; }
-  .msg.error-msg { color: var(--red); }
-
-  .loader {
-    display: inline-block; width: 20px; height: 20px;
-    border: 2px solid var(--border); border-top-color: var(--teal-bright);
-    border-radius: 50%; animation: spin .7s linear infinite;
-    vertical-align: middle; margin-right: 8px;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ── ERROR BANNER ── */
-  #error-banner {
-    display: none;
-    background: rgba(224,108,117,0.1); border: 1px solid var(--red);
-    border-radius: 8px; padding: 16px 20px; margin-bottom: 24px;
-    color: var(--red); font-size: 13px; line-height: 1.6;
-  }
-  #error-banner strong { display: block; margin-bottom: 6px; font-size: 14px; }
-  #error-banner code {
-    background: rgba(224,108,117,0.15); padding: 2px 6px;
-    border-radius: 3px; font-family: 'DM Mono', monospace; font-size: 12px;
-  }
-  #error-banner ol { margin: 8px 0 0 20px; }
-  #error-banner ol li { margin-bottom: 4px; }
-
-  /* ── FOOTER ── */
-  footer {
-    margin-top: 48px; padding-top: 24px;
-    border-top: 1px solid var(--border);
-    text-align: center; color: var(--text-dim);
-    font-size: 12px; font-family: 'DM Mono', monospace;
-  }
-
-  @media (max-width: 600px) {
-    .stats-row { grid-template-columns: 1fr 1fr; }
-    .header-inner { flex-direction: column; align-items: flex-start; }
-  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:.2;pointer-events:none;z-index:0}
+  .wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 24px 60px}
+  header{padding:40px 0 32px;border-bottom:1px solid var(--border);margin-bottom:36px}
+  .header-inner{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px}
+  .logo-label{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--teal-bright);margin-bottom:6px;font-family:'DM Mono',monospace}
+  h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,5vw,56px);line-height:1;color:#fff;letter-spacing:1px}
+  h1 span{color:var(--teal-bright)}
+  .header-meta{font-size:12px;color:var(--text-dim);font-family:'DM Mono',monospace;text-align:right}
+  .data-badge{display:inline-block;background:var(--teal-glow);border:1px solid var(--teal);color:var(--teal-bright);font-size:11px;padding:4px 10px;border-radius:4px;font-family:'DM Mono',monospace;letter-spacing:1px;margin-top:8px}
+  .tabs{display:flex;gap:4px;margin-bottom:32px}
+  .tab{padding:10px 24px;border-radius:6px 6px 0 0;border:1px solid var(--border);border-bottom:none;background:var(--surface);color:var(--text-dim);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;transition:all .2s}
+  .tab:hover{color:var(--text);background:var(--surface2)}
+  .tab.active{background:var(--surface2);color:var(--teal-bright);border-color:var(--teal);border-bottom:1px solid var(--surface2);position:relative;top:1px}
+  .panel{display:none}
+  .panel.active{display:block}
+  .panel-card{background:var(--surface2);border:1px solid var(--border);border-radius:0 8px 8px 8px;padding:28px}
+  .controls{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:28px}
+  .control-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--teal-bright);font-family:'DM Mono',monospace;white-space:nowrap}
+  select{background:var(--bg);color:var(--text);border:1px solid var(--teal);border-radius:6px;padding:10px 36px 10px 14px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;min-width:240px;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2352b8b1' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;outline:none;transition:border-color .2s,box-shadow .2s}
+  select:focus{border-color:var(--teal-bright);box-shadow:0 0 0 3px var(--teal-glow)}
+  .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+  .stat-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:16px 20px;transition:border-color .2s}
+  .stat-card:hover{border-color:var(--teal)}
+  .stat-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);font-family:'DM Mono',monospace;margin-bottom:6px}
+  .stat-value{font-size:22px;font-weight:600;color:var(--teal-bright);font-family:'DM Mono',monospace}
+  .stat-unit{font-size:11px;color:var(--text-dim);margin-left:4px}
+  .table-wrap{border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  thead tr{background:var(--bg)}
+  thead th{padding:12px 16px;text-align:left;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--teal-bright);font-family:'DM Mono',monospace;border-bottom:1px solid var(--border);font-weight:500}
+  thead th:not(:first-child){text-align:right}
+  tbody tr{border-bottom:1px solid var(--border);transition:background .15s}
+  tbody tr:last-child{border-bottom:none}
+  tbody tr:hover{background:var(--teal-glow)}
+  tbody td{padding:11px 16px;color:var(--text)}
+  tbody td:not(:first-child){text-align:right;font-family:'DM Mono',monospace;font-size:13px}
+  tbody td:first-child{color:var(--text-head);font-weight:500}
+  tfoot tr{background:var(--bg);border-top:2px solid var(--teal)}
+  tfoot td{padding:12px 16px;font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--accent)}
+  tfoot td:not(:first-child){text-align:right}
+  .row-num{color:var(--text-dim)!important;font-size:11px!important;font-family:'DM Mono',monospace;width:40px}
+  .msg{text-align:center;padding:60px 20px;color:var(--text-dim);font-size:14px}
+  footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--border);text-align:center;color:var(--text-dim);font-size:12px;font-family:'DM Mono',monospace}
+  @media(max-width:600px){.stats-row{grid-template-columns:1fr 1fr}.header-inner{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
 <body>
 <div class="wrap">
-
-  <!-- HEADER -->
   <header>
     <div class="header-inner">
       <div class="logo-block">
         <div class="logo-label">Punjab Urban Unit — GIS</div>
         <h1>Land Use <span>Plan</span></h1>
-        <div class="data-badge"><span id="status-dot"></span><span id="status-text">Loading data…</span></div>
+        <div class="data-badge">✦ 689 records · 37 districts · 104 zones</div>
       </div>
       <div class="header-meta">
-        <div>Districts of Punjab</div>
-        <div style="margin-top:4px" id="record-count">— records</div>
+        <div>Districts of Punjab, Pakistan</div>
+        <div style="margin-top:4px;color:var(--teal-bright)">Data: LUC_for_Dashboard.xlsx</div>
       </div>
     </div>
   </header>
 
-  <!-- ERROR BANNER -->
-  <div id="error-banner">
-    <strong>⚠️ Could not load Google Sheet data</strong>
-    Your Google Sheet needs to be made public. Please follow these steps:
-    <ol>
-      <li>Open your Google Sheet</li>
-      <li>Click <strong>Share</strong> (top right)</li>
-      <li>Under "General access", select <code>Anyone with the link</code></li>
-      <li>Set role to <code>Viewer</code> and click Done</li>
-      <li>Refresh this page</li>
-    </ol>
-  </div>
-
-  <!-- TABS -->
   <div class="tabs">
     <div class="tab active" onclick="switchTab('district')">🗺 By District</div>
     <div class="tab" onclick="switchTab('zone')">🏷 By Zone</div>
   </div>
 
-  <!-- ── PANEL: BY DISTRICT ── -->
+  <!-- BY DISTRICT -->
   <div class="panel active" id="panel-district">
     <div class="panel-card">
       <div class="controls">
         <span class="control-label">Select District</span>
-        <select id="sel-district" onchange="renderDistrict()">
-          <option value="">Loading…</option>
-        </select>
+        <select id="sel-district" onchange="renderDistrict()"></select>
       </div>
-      <div class="stats-row" id="stats-district">
-        <div class="stat-card"><div class="stat-label">Total Zones</div><div class="stat-value" id="sd-zones">—</div></div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-label">Zone Types</div><div class="stat-value" id="sd-zones">—</div></div>
         <div class="stat-card"><div class="stat-label">Total Count</div><div class="stat-value" id="sd-count">—</div></div>
         <div class="stat-card"><div class="stat-label">Total Area</div><div class="stat-value" id="sd-area">—<span class="stat-unit">acres</span></div></div>
       </div>
-      <div class="table-wrap" id="tbl-district">
-        <div class="msg"><span class="loader"></span> Loading…</div>
-      </div>
+      <div class="table-wrap" id="tbl-district"><div class="msg">Select a district above</div></div>
     </div>
   </div>
 
-  <!-- ── PANEL: BY ZONE ── -->
+  <!-- BY ZONE -->
   <div class="panel" id="panel-zone">
     <div class="panel-card">
       <div class="controls">
         <span class="control-label">Select Zone</span>
-        <select id="sel-zone" onchange="renderZone()">
-          <option value="">Loading…</option>
-        </select>
+        <select id="sel-zone" onchange="renderZone()"></select>
       </div>
       <div class="stats-row">
         <div class="stat-card"><div class="stat-label">Districts with Zone</div><div class="stat-value" id="sz-districts">—</div></div>
         <div class="stat-card"><div class="stat-label">Total Count</div><div class="stat-value" id="sz-count">—</div></div>
         <div class="stat-card"><div class="stat-label">Total Area</div><div class="stat-value" id="sz-area">—<span class="stat-unit">acres</span></div></div>
       </div>
-      <div class="table-wrap" id="tbl-zone">
-        <div class="msg"><span class="loader"></span> Loading…</div>
-      </div>
+      <div class="table-wrap" id="tbl-zone"><div class="msg">Select a zone above</div></div>
     </div>
   </div>
 
-  <footer>Punjab Land Use Plan Dashboard &nbsp;·&nbsp; Data sourced from Google Sheets</footer>
+  <footer>Punjab Land Use Plan Dashboard &nbsp;·&nbsp; 37 Districts &nbsp;·&nbsp; 104 Zone Types</footer>
 </div>
 
 <script>
-// ── CONFIG ──────────────────────────────────────────────────────────────────
-const SHEET_ID  = '1Ipwd9qDLVvfDX0u6r9T3J5ap4iwjPVVdxgs3amSU2iE';
-const SHEET_GID = '776086504';
-const DIRECT_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${SHEET_GID}`;
-const PROXY_URL  = `https://corsproxy.io/?url=${encodeURIComponent(DIRECT_URL)}`;
-const CSV_URL    = PROXY_URL;
+const RAW=[{"d":"Mandi Bahauddin","l":"HTL Buffer Zone","f":24.0,"a":30.114},{"d":"Attock","l":"Agro Farm Zone","f":8.0,"a":5388.2133},{"d":"Attock","l":"Agro Industry Zone","f":1.0,"a":1766.2671},{"d":"Attock","l":"Bricks and Blocks Industry Zone","f":2.0,"a":640.0758},{"d":"Attock","l":"Business and Trade Zone","f":1.0,"a":68.9156},{"d":"Attock","l":"Bypass or Ring Road","f":55.0,"a":611.3565},{"d":"Attock","l":"CBD Zone","f":19.0,"a":8936.2228},{"d":"Attock","l":"Commercial Zone","f":56.0,"a":1188.4217},{"d":"Attock","l":"Economic Zone","f":52.0,"a":13282.1254},{"d":"Attock","l":"Educational Neighbourhood","f":5.0,"a":266.187},{"d":"Attock","l":"Educational Zone","f":6.0,"a":87.2544},{"d":"Attock","l":"Environmental Sensitive Area","f":4.0,"a":5693.3352},{"d":"Attock","l":"Farm Housing Zone","f":4.0,"a":989.9444},{"d":"Attock","l":"Farm to Market Road","f":182.0,"a":540.4243},{"d":"Attock","l":"Green Buffer Zone","f":23.0,"a":1879.6223},{"d":"Attock","l":"Health Neighbourhood","f":8.0,"a":312.535},{"d":"Attock","l":"Health Zone","f":3.0,"a":70.8491},{"d":"Attock","l":"Industrial Zone","f":11.0,"a":2149.9649},{"d":"Attock","l":"Institutional Zone","f":9.0,"a":486.8722},{"d":"Attock","l":"Inter City Service Corridor","f":21.0,"a":2791.6494},{"d":"Attock","l":"IT Neighbourhood","f":2.0,"a":1410.0227},{"d":"Attock","l":"IT Zone","f":2.0,"a":45.6682},{"d":"Attock","l":"Mixed Use Zone","f":12.0,"a":858.2761},{"d":"Attock","l":"No Construction Zone","f":6.0,"a":3791.023},{"d":"Attock","l":"Recreational Zone","f":12.0,"a":2346.6625},{"d":"Attock","l":"Residential Zone","f":210.0,"a":19639.4351},{"d":"Attock","l":"Road Widening","f":38.0,"a":25.5445},{"d":"Attock","l":"Structure Plan Road","f":289.0,"a":1691.4245},{"d":"Attock","l":"Tourist Zone","f":8.0,"a":2943.5996},{"d":"Attock","l":"Waste Water Treatment Plant","f":4.0,"a":131.8532},{"d":"Attock","l":"Water Body Buffer Zone","f":140.0,"a":11892.1773},{"d":"Attock","l":"Wholesale Market Zone","f":2.0,"a":349.2034},{"d":"Bahawalnagar","l":"Agro Industry Zone","f":21.0,"a":2850.1842},{"d":"Bahawalnagar","l":"Botanical Garden","f":1.0,"a":48.9009},{"d":"Bahawalnagar","l":"Bus and Truck Terminal","f":6.0,"a":65.4903},{"d":"Bahawalnagar","l":"Bypass or Ring Road","f":259.0,"a":1460.4293},{"d":"Bahawalnagar","l":"CBD Zone","f":2.0,"a":33.8396},{"d":"Bahawalnagar","l":"City Park and Open Spaces","f":7.0,"a":63.8937},{"d":"Bahawalnagar","l":"Commercial Zone","f":27.0,"a":430.9213},{"d":"Bahawalnagar","l":"Ecological Zone","f":1.0,"a":153.9064},{"d":"Bahawalnagar","l":"Economic Zone","f":2.0,"a":53.5598},{"d":"Bahawalnagar","l":"Educational Zone","f":22.0,"a":263.7593},{"d":"Bahawalnagar","l":"Farm to Market Road","f":10743.0,"a":9717.0456},{"d":"Bahawalnagar","l":"Fish Farming Zone","f":6.0,"a":64.8058},{"d":"Bahawalnagar","l":"Green Buffer Zone","f":51.0,"a":170.3094},{"d":"Bahawalnagar","l":"Health Zone","f":25.0,"a":262.9345},{"d":"Bahawalnagar","l":"Hospitality Zone","f":1.0,"a":50.4662},{"d":"Bahawalnagar","l":"Industrial Zone","f":9.0,"a":775.5022},{"d":"Bahawalnagar","l":"Institutional Zone","f":9.0,"a":224.4825},{"d":"Bahawalnagar","l":"Landfill Site","f":9.0,"a":237.3665},{"d":"Bahawalnagar","l":"Natural Growth Boundary","f":124.0,"a":2672.0819},{"d":"Bahawalnagar","l":"Recreational Zone","f":9.0,"a":104.1657},{"d":"Bahawalnagar","l":"Religious Hospitality Zone","f":18.0,"a":97.5655},{"d":"Bahawalnagar","l":"Relocation Zone (for Brick Kilns)","f":3.0,"a":84.1689},{"d":"Bahawalnagar","l":"Residential Zone","f":906.0,"a":11655.6816},{"d":"Bahawalnagar","l":"Road Widening","f":662.0,"a":390.6084},{"d":"Bahawalnagar","l":"Structure Plan Road","f":643.0,"a":1140.0952},{"d":"Bahawalnagar","l":"Tourism Economic Hub","f":1.0,"a":593.9142},{"d":"Bahawalnagar","l":"Water Body Buffer Zone","f":40.0,"a":10855.3535},{"d":"Bahawalpur","l":"Bypass or Ring Road","f":2.0,"a":928.8013},{"d":"Bahawalpur","l":"City Park and Open Spaces","f":8.0,"a":82.6127},{"d":"Bahawalpur","l":"Commercial Zone","f":11.0,"a":151.8134},{"d":"Bahawalpur","l":"Hospitality Zone","f":1.0,"a":32.875},{"d":"Bahawalpur","l":"HTL Buffer Zone","f":185.0,"a":2299.3629},{"d":"Bahawalpur","l":"Industrial Zone","f":2.0,"a":0.925},{"d":"Bahawalpur","l":"Institutional Zone","f":26.0,"a":2802.2635},{"d":"Bahawalpur","l":"Residential Zone","f":389.0,"a":13625.1109},{"d":"Bahawalpur","l":"Structure Plan Road","f":98.0,"a":1573.2375},{"d":"Bhakkar","l":"Bypass or Ring Road","f":181.0,"a":1093.1547},{"d":"Bhakkar","l":"CBD Zone","f":1.0,"a":52.8836},{"d":"Bhakkar","l":"Commercial Zone","f":7.0,"a":282.1779},{"d":"Bhakkar","l":"Educational Zone","f":7.0,"a":192.4456},{"d":"Bhakkar","l":"Farm to Market Road","f":199.0,"a":2259.4205},{"d":"Bhakkar","l":"Health Neighbourhood","f":2.0,"a":143.8752},{"d":"Bhakkar","l":"Industrial Zone","f":7.0,"a":439.3586},{"d":"Bhakkar","l":"Institutional Zone","f":8.0,"a":307.8868},{"d":"Bhakkar","l":"Residential Zone","f":115.0,"a":6633.4597},{"d":"Bhakkar","l":"Structure Plan Road","f":35.0,"a":547.7713},{"d":"Chakwal","l":"Agro Industry Zone","f":3.0,"a":45.8933},{"d":"Chakwal","l":"Archeological Preserved Zone","f":3.0,"a":41.2959},{"d":"Chakwal","l":"Bypass or Ring Road","f":171.0,"a":385.342},{"d":"Chakwal","l":"CBD Zone","f":9.0,"a":388.9117},{"d":"Chakwal","l":"City Park and Open Spaces","f":3.0,"a":20.5468},{"d":"Chakwal","l":"Commercial Zone","f":76.0,"a":53.5201},{"d":"Chakwal","l":"Educational Neighbourhood","f":26.0,"a":864.657},{"d":"Chakwal","l":"Educational Zone","f":1.0,"a":15.006},{"d":"Chakwal","l":"Environmental Sensitive Area","f":11.0,"a":10669.0573},{"d":"Chakwal","l":"Farm Housing Zone","f":24.0,"a":1484.037},{"d":"Chakwal","l":"Farm to Market Road","f":831.0,"a":713.0458},{"d":"Chakwal","l":"Green Buffer Zone","f":54.0,"a":45.7784},{"d":"Chakwal","l":"Health Neighbourhood","f":14.0,"a":509.4252},{"d":"Chakwal","l":"Health Zone","f":1.0,"a":20.5973},{"d":"Chakwal","l":"Hospitality Zone","f":19.0,"a":46.0168},{"d":"Chakwal","l":"Industrial Zone","f":28.0,"a":2334.1217},{"d":"Chakwal","l":"Institutional Zone","f":11.0,"a":79.6181},{"d":"Chakwal","l":"IT Neighbourhood","f":13.0,"a":135.5145},{"d":"Chakwal","l":"Mixed Use Zone","f":36.0,"a":213.4792},{"d":"Chakwal","l":"Natural Growth Boundary","f":442.0,"a":10967.5817},{"d":"Chakwal","l":"Recreational Zone","f":3.0,"a":16.2926},{"d":"Chakwal","l":"Residential Zone","f":449.0,"a":4526.5041},{"d":"Chakwal","l":"Road Widening","f":258.0,"a":38.6264},{"d":"Chakwal","l":"Structure Plan Road","f":367.0,"a":171.7778},{"d":"Chakwal","l":"Water Body Buffer Zone","f":966.0,"a":9155.7203},{"d":"Chiniot","l":"Agro Industry Zone","f":3.0,"a":1058.7165},{"d":"Chiniot","l":"Bypass or Ring Road","f":88.0,"a":152.4935},{"d":"Chiniot","l":"CBD Zone","f":9.0,"a":33.5756},{"d":"Chiniot","l":"City Park and Open Spaces","f":123.0,"a":279.9018},{"d":"Chiniot","l":"Commercial Zone","f":9.0,"a":28.7949},{"d":"Chiniot","l":"Educational Neighbourhood","f":20.0,"a":257.7022},{"d":"Chiniot","l":"Farm to Market Road","f":2649.0,"a":3383.0833},{"d":"Chiniot","l":"Green Buffer Zone","f":89.0,"a":123.9947},{"d":"Chiniot","l":"High Density Residential Zone","f":5.0,"a":86.7992},{"d":"Chiniot","l":"Industrial Zone","f":77.0,"a":3058.5163},{"d":"Chiniot","l":"Institutional Zone","f":23.0,"a":298.4217},{"d":"Chiniot","l":"Landfill Site","f":2.0,"a":23.2766},{"d":"Chiniot","l":"Mining Area","f":2.0,"a":61.3099},{"d":"Chiniot","l":"Mixed Use Zone","f":27.0,"a":171.2233},{"d":"Chiniot","l":"Natural Growth Boundary","f":103.0,"a":543.8197},{"d":"Chiniot","l":"Recreational Zone","f":4.0,"a":40.7919},{"d":"Chiniot","l":"Residential Zone","f":475.0,"a":5528.0234},{"d":"Chiniot","l":"Road Widening","f":112.0,"a":39.1572},{"d":"Chiniot","l":"Specialized Wood Industry Zone","f":10.0,"a":134.5875},{"d":"Chiniot","l":"Structure Plan Road","f":459.0,"a":580.8415},{"d":"Chiniot","l":"Water Body Buffer Zone","f":163.0,"a":17902.866},{"d":"DG Khan","l":"Agro Industry Zone","f":2.0,"a":460.3945},{"d":"DG Khan","l":"Bypass or Ring Road","f":6.0,"a":367.3936},{"d":"DG Khan","l":"City Park and Open Spaces","f":5.0,"a":37.5713},{"d":"DG Khan","l":"Economic Neighbourhood","f":5.0,"a":183.855},{"d":"DG Khan","l":"Educational Neighbourhood","f":14.0,"a":999.856},{"d":"DG Khan","l":"Fish Farming Zone","f":1.0,"a":51.5148},{"d":"DG Khan","l":"Green Buffer Zone","f":5.0,"a":1096.9649},{"d":"DG Khan","l":"Health Neighbourhood","f":10.0,"a":446.5809},{"d":"DG Khan","l":"HTL Buffer Zone","f":125.0,"a":2441.9901},{"d":"DG Khan","l":"Institutional Zone","f":3.0,"a":96.346},{"d":"DG Khan","l":"Organic Farming Zone","f":8.0,"a":4243.0583},{"d":"DG Khan","l":"Recreational Zone","f":1.0,"a":16.4138},{"d":"DG Khan","l":"Residential Zone","f":71.0,"a":11467.107},{"d":"DG Khan","l":"Road Widening","f":1.0,"a":108.9777},{"d":"DG Khan","l":"Structure Plan Road","f":50.0,"a":207.0521},{"d":"Faisalabad","l":"Agro Industry Zone","f":1.0,"a":369.119},{"d":"Faisalabad","l":"Business and Professional Office","f":1.0,"a":495.3855},{"d":"Faisalabad","l":"Business and Technology Park","f":1.0,"a":1569.7705},{"d":"Faisalabad","l":"Bypass or Ring Road","f":1.0,"a":774.7192},{"d":"Faisalabad","l":"CBD Zone","f":1.0,"a":182.0091},{"d":"Faisalabad","l":"City Park and Open Spaces","f":1.0,"a":1580.0929},{"d":"Faisalabad","l":"Commercial Zone","f":10.0,"a":248.097},{"d":"Faisalabad","l":"Cultural and Sports Zone","f":1.0,"a":2313.1841},{"d":"Faisalabad","l":"Early Urban Containment Zone","f":28.0,"a":20252.3654},{"d":"Faisalabad","l":"Educational Neighbourhood","f":8.0,"a":646.0522},{"d":"Faisalabad","l":"Educational Zone","f":1.0,"a":17.5361},{"d":"Faisalabad","l":"Expo and Exhibition Center","f":3.0,"a":3283.4774},{"d":"Faisalabad","l":"Farm Housing Zone","f":8.0,"a":7028.5231},{"d":"Faisalabad","l":"Farm to Market Road","f":2.0,"a":730.4253},{"d":"Faisalabad","l":"Health Neighbourhood","f":8.0,"a":517.9947},{"d":"Faisalabad","l":"Health Zone","f":5.0,"a":79.0063},{"d":"Faisalabad","l":"High Density Residential Zone","f":5.0,"a":9187.137},{"d":"Faisalabad","l":"Hotels and Tourism Zone","f":7.0,"a":2252.9741},{"d":"Faisalabad","l":"Industrial Zone","f":3.0,"a":1189.2536},{"d":"Faisalabad","l":"Institutional Neighbourhood","f":3.0,"a":240.3467},{"d":"Faisalabad","l":"Institutional Zone","f":3.0,"a":6173.0548},{"d":"Faisalabad","l":"IT Software Development Park","f":3.0,"a":1424.7588},{"d":"Faisalabad","l":"Light Industrial Zone","f":4.0,"a":2890.2472},{"d":"Faisalabad","l":"Low Density Residential Zone","f":18.0,"a":18717.1816},{"d":"Faisalabad","l":"Manufacturing Zone","f":9.0,"a":13261.7954},{"d":"Faisalabad","l":"Medium Density Industrial Housing Zone","f":6.0,"a":3162.3162},{"d":"Faisalabad","l":"Medium Density Residential Zone","f":4.0,"a":7894.9536},{"d":"Faisalabad","l":"Mixed Use Zone","f":6.0,"a":7536.4241},{"d":"Faisalabad","l":"Natural Growth Boundary","f":35.0,"a":1470.3897},{"d":"Faisalabad","l":"Peri Urban Area","f":19.0,"a":110086.2689},{"d":"Faisalabad","l":"Residential Zone","f":86.0,"a":5124.9826},{"d":"Faisalabad","l":"Structure Plan Road","f":1.0,"a":601.1978},{"d":"Faisalabad","l":"Warehousing and Freight Zone","f":6.0,"a":5830.6125},{"d":"Faisalabad","l":"Waste Water Treatment Plant","f":1.0,"a":529.5689},{"d":"Faisalabad","l":"Zonal Community Hub","f":1.0,"a":395.2992},{"d":"Gujranwala","l":"Agro Industry Zone","f":5.0,"a":247.916},{"d":"Gujranwala","l":"Bypass or Ring Road","f":31.0,"a":1268.9021},{"d":"Gujranwala","l":"Cattle Market","f":1.0,"a":19.8858},{"d":"Gujranwala","l":"Cottage Industry Zone","f":1.0,"a":128.6579},{"d":"Gujranwala","l":"Educational Neighbourhood","f":1.0,"a":183.5894},{"d":"Gujranwala","l":"Farm Housing Zone","f":6.0,"a":117.1366},{"d":"Gujranwala","l":"Green Buffer Zone","f":31.0,"a":1351.7636},{"d":"Gujranwala","l":"HTL Buffer Zone","f":41.0,"a":1430.871},{"d":"Gujranwala","l":"Industrial Zone","f":34.0,"a":6992.582},{"d":"Gujranwala","l":"Institutional Zone","f":1.0,"a":246.1098},{"d":"Gujranwala","l":"Landfill Site","f":2.0,"a":98.1168},{"d":"Gujranwala","l":"Livestock Rearing Zone","f":25.0,"a":2663.5193},{"d":"Gujranwala","l":"Mixed Use Zone","f":1.0,"a":126.7903},{"d":"Gujranwala","l":"Recreational Zone","f":1.0,"a":704.7794},{"d":"Gujranwala","l":"Residential Zone","f":244.0,"a":19665.5},{"d":"Gujranwala","l":"Structure Plan Road","f":137.0,"a":1756.0741},{"d":"Gujranwala","l":"Transport Terminal","f":1.0,"a":76.6868},{"d":"Gujrat","l":"Agro Industry Zone","f":1.0,"a":271.8542},{"d":"Gujrat","l":"Bypass or Ring Road","f":14.0,"a":1258.2402},{"d":"Gujrat","l":"CBD Zone","f":1.0,"a":291.7502},{"d":"Gujrat","l":"Commercial Zone","f":12.0,"a":399.8907},{"d":"Gujrat","l":"Ecological Corridor","f":10.0,"a":971.6632},{"d":"Gujrat","l":"Economic Zone","f":4.0,"a":318.0066},{"d":"Gujrat","l":"Farm to Market Road","f":13.0,"a":1634.6453},{"d":"Gujrat","l":"Green Buffer Zone","f":1.0,"a":74.2936},{"d":"Gujrat","l":"HTL Buffer Zone","f":85.0,"a":3624.8757},{"d":"Gujrat","l":"Industrial Zone","f":1.0,"a":316.9448},{"d":"Gujrat","l":"Institutional Zone","f":6.0,"a":417.4207},{"d":"Gujrat","l":"Inter City Service Corridor","f":2.0,"a":158.0876},{"d":"Gujrat","l":"Livestock Rearing Zone","f":1.0,"a":91.7998},{"d":"Gujrat","l":"Mixed Use Zone","f":6.0,"a":1058.2454},{"d":"Gujrat","l":"Natural Growth Boundary","f":24.0,"a":506.7884},{"d":"Gujrat","l":"Residential Zone","f":175.0,"a":14230.9354},{"d":"Gujrat","l":"Road Widening","f":77.0,"a":242.8387},{"d":"Gujrat","l":"Structure Plan Road","f":44.0,"a":327.7248},{"d":"Gujrat","l":"Water Body Buffer Zone","f":243.0,"a":2681.1862},{"d":"Hafizabad","l":"Agro Industry Zone","f":21.0,"a":444.4668},{"d":"Hafizabad","l":"Bypass or Ring Road","f":190.0,"a":725.1672},{"d":"Hafizabad","l":"CBD Zone","f":7.0,"a":196.544},{"d":"Hafizabad","l":"City Park and Open Spaces","f":3.0,"a":38.6874},{"d":"Hafizabad","l":"Commercial Zone","f":23.0,"a":271.343},{"d":"Hafizabad","l":"Cottage Industry Zone","f":3.0,"a":20.1874},{"d":"Hafizabad","l":"Economic Zone","f":7.0,"a":262.1047},{"d":"Hafizabad","l":"Educational Institutional Zone","f":2.0,"a":30.0184},{"d":"Hafizabad","l":"Educational Neighbourhood","f":13.0,"a":156.4656},{"d":"Hafizabad","l":"Farm to Market Road","f":676.0,"a":1739.115},{"d":"Hafizabad","l":"Gawala Colony","f":1.0,"a":35.9931},{"d":"Hafizabad","l":"Green Buffer Zone","f":12.0,"a":29.1057},{"d":"Hafizabad","l":"Health Neighbourhood","f":14.0,"a":93.0677},{"d":"Hafizabad","l":"Health Zone","f":1.0,"a":0.1566},{"d":"Hafizabad","l":"Industrial Zone","f":7.0,"a":226.9601},{"d":"Hafizabad","l":"Institutional Zone","f":11.0,"a":104.9794},{"d":"Hafizabad","l":"IT Neighbourhood","f":4.0,"a":34.4954},{"d":"Hafizabad","l":"Mixed Use Zone","f":4.0,"a":20.9453},{"d":"Hafizabad","l":"Natural Growth Boundary","f":134.0,"a":8811.5545},{"d":"Hafizabad","l":"Recreational Zone","f":4.0,"a":32.5108},{"d":"Hafizabad","l":"Relocation Zone","f":2.0,"a":107.7221},{"d":"Hafizabad","l":"Residential Zone","f":383.0,"a":4561.5737},{"d":"Hafizabad","l":"Road Widening","f":233.0,"a":242.3381},{"d":"Hafizabad","l":"Specialized Industrial Zone","f":10.0,"a":147.7008},{"d":"Hafizabad","l":"Structure Plan Road","f":365.0,"a":699.0501},{"d":"Hafizabad","l":"Warehouse and Freight Terminal","f":3.0,"a":82.9762},{"d":"Hafizabad","l":"Waste Water Treatment Plant","f":2.0,"a":189.5407},{"d":"Jhang","l":"Agro Industry Zone","f":3.0,"a":228.8606},{"d":"Jhang","l":"Bypass or Ring Road","f":253.0,"a":1390.8387},{"d":"Jhang","l":"Cattle Market","f":2.0,"a":60.0168},{"d":"Jhang","l":"Commercial Zone","f":6.0,"a":149.1757},{"d":"Jhang","l":"Educational Neighbourhood","f":7.0,"a":587.0598},{"d":"Jhang","l":"Farm to Market Road","f":309.0,"a":499.3647},{"d":"Jhang","l":"Gym Khana","f":1.0,"a":37.7511},{"d":"Jhang","l":"Health Neighbourhood","f":1.0,"a":104.5626},{"d":"Jhang","l":"Industrial Zone","f":6.0,"a":1354.1276},{"d":"Jhang","l":"Institutional Neighbourhood","f":3.0,"a":504.6325},{"d":"Jhang","l":"Judicial Complex","f":1.0,"a":57.1364},{"d":"Jhang","l":"Landfill Site","f":1.0,"a":199.9663},{"d":"Jhang","l":"Mixed Use Zone","f":12.0,"a":161.3447},{"d":"Jhang","l":"Natural Growth Boundary","f":18.0,"a":4204.9941},{"d":"Jhang","l":"Residential Zone","f":106.0,"a":4427.0981},{"d":"Jhang","l":"Road Widening","f":115.0,"a":31.5382},{"d":"Jhang","l":"Structure Plan Road","f":258.0,"a":693.1485},{"d":"Jhang","l":"Waste Water Treatment Plant","f":4.0,"a":300.5897},{"d":"Jhelum","l":"Bypass or Ring Road","f":5.0,"a":370.147},{"d":"Jhelum","l":"CBD Zone","f":1.0,"a":83.1061},{"d":"Jhelum","l":"City Park and Open Spaces","f":1.0,"a":51.375},{"d":"Jhelum","l":"Commercial Zone","f":1.0,"a":20.3527},{"d":"Jhelum","l":"Educational Zone","f":1.0,"a":18.4778},{"d":"Jhelum","l":"Environmental Sensitive Area","f":1.0,"a":40.7256},{"d":"Jhelum","l":"Farm to Market Road","f":1.0,"a":53.0337},{"d":"Jhelum","l":"Health Zone","f":1.0,"a":29.84},{"d":"Jhelum","l":"HTL Buffer Zone","f":12.0,"a":1167.4373},{"d":"Jhelum","l":"Industrial Zone","f":2.0,"a":281.5165},{"d":"Jhelum","l":"Institutional Zone","f":1.0,"a":18.2786},{"d":"Jhelum","l":"Mixed Use Zone","f":1.0,"a":139.5301},{"d":"Jhelum","l":"Natural Growth Boundary","f":7.0,"a":756.1798},{"d":"Jhelum","l":"Residential Zone","f":55.0,"a":5833.7234},{"d":"Jhelum","l":"Road Widening","f":23.0,"a":178.6749},{"d":"Jhelum","l":"Structure Plan Road","f":24.0,"a":302.9777},{"d":"Khanewal","l":"Bus and Truck Terminal","f":5.0,"a":96.42},{"d":"Khanewal","l":"Business and Trade Zone","f":1.0,"a":21.8068},{"d":"Khanewal","l":"Bypass or Ring Road","f":1.0,"a":0.0005},{"d":"Khanewal","l":"City Park and Open Spaces","f":5.0,"a":27.9406},{"d":"Khanewal","l":"Commercial Zone","f":11.0,"a":180.6997},{"d":"Khanewal","l":"District Complex","f":1.0,"a":6.8495},{"d":"Khanewal","l":"HTL Buffer Zone","f":198.0,"a":2084.3148},{"d":"Khanewal","l":"Industrial Corridor","f":2.0,"a":32.1101},{"d":"Khanewal","l":"Industrial Zone","f":4.0,"a":134.9346},{"d":"Khanewal","l":"Institutional Zone","f":4.0,"a":124.2527},{"d":"Khanewal","l":"Natural Growth Boundary","f":190.0,"a":3183.5598},{"d":"Khanewal","l":"Recreational Zone","f":5.0,"a":83.7136},{"d":"Khanewal","l":"Residential Zone","f":218.0,"a":8018.7103},{"d":"Khanewal","l":"Road Widening","f":14.0,"a":43.3282},{"d":"Khanewal","l":"Structure Plan Road","f":1.0,"a":995.4685},{"d":"Khanewal","l":"Timber Market","f":1.0,"a":2.1254},{"d":"Khanewal","l":"Tourism and Historical Site","f":12.0,"a":93.4862},{"d":"Khanewal","l":"Veg , Fruit and Grain Market or Timber Market","f":2.0,"a":9.8876},{"d":"Khushab","l":"Bypass or Ring Road","f":45.0,"a":714.0394},{"d":"Khushab","l":"Commercial Zone","f":10.0,"a":292.7279},{"d":"Khushab","l":"Economic Neighbourhood","f":5.0,"a":65.165},{"d":"Khushab","l":"Educational Zone","f":1.0,"a":32.341},{"d":"Khushab","l":"Farm to Market Road","f":65.0,"a":1364.5106},{"d":"Khushab","l":"Green Buffer Zone","f":11.0,"a":3504.8888},{"d":"Khushab","l":"Health Zone","f":1.0,"a":37.3163},{"d":"Khushab","l":"Industrial Zone","f":4.0,"a":2323.6526},{"d":"Khushab","l":"Institutional Zone","f":9.0,"a":378.0396},{"d":"Khushab","l":"Mixed Use Zone","f":1.0,"a":46.953},{"d":"Khushab","l":"Recreational Zone","f":6.0,"a":171.4412},{"d":"Khushab","l":"Residential Zone","f":161.0,"a":10709.6454},{"d":"Khushab","l":"Road Widening","f":15.0,"a":31.4657},{"d":"Khushab","l":"Salt Processing or Economic Activity Zone","f":2.0,"a":108.6828},{"d":"Khushab","l":"Structure Plan Road","f":193.0,"a":500.2091},{"d":"Kot Addu","l":"Bus and Truck Terminal","f":2.0,"a":202.0713},{"d":"Kot Addu","l":"Bypass or Ring Road","f":9.0,"a":674.4889},{"d":"Kot Addu","l":"City Park and Open Spaces","f":10.0,"a":255.9811},{"d":"Kot Addu","l":"Commercial Zone","f":6.0,"a":48.7316},{"d":"Kot Addu","l":"Economic Neighbourhood","f":3.0,"a":204.9269},{"d":"Kot Addu","l":"Educational Neighbourhood","f":11.0,"a":208.9249},{"d":"Kot Addu","l":"Green Buffer Zone","f":52.0,"a":351.3028},{"d":"Kot Addu","l":"Health Neighbourhood","f":8.0,"a":153.2763},{"d":"Kot Addu","l":"High Density Residential Zone","f":92.0,"a":1064.6841},{"d":"Kot Addu","l":"HTL Buffer Zone","f":50.0,"a":2261.8406},{"d":"Kot Addu","l":"Industrial Zone","f":55.0,"a":1722.5973},{"d":"Kot Addu","l":"Institutional Neighbourhood","f":4.0,"a":196.231},{"d":"Kot Addu","l":"Institutional Zone","f":1.0,"a":0.035},{"d":"Kot Addu","l":"Mixed Use Zone","f":2.0,"a":38.7548},{"d":"Kot Addu","l":"Natural Growth Boundary","f":62.0,"a":4845.8807},{"d":"Kot Addu","l":"Residential Zone","f":252.0,"a":9816.3768},{"d":"Kot Addu","l":"Road Widening","f":20.0,"a":672.0197},{"d":"Kot Addu","l":"Structure Plan Road","f":20.0,"a":343.8828},{"d":"Layyah","l":"Agro Industry Zone","f":28.0,"a":1637.5479},{"d":"Layyah","l":"Bypass or Ring Road","f":242.0,"a":656.4426},{"d":"Layyah","l":"CBD Zone","f":25.0,"a":117.9071},{"d":"Layyah","l":"City Park and Open Spaces","f":17.0,"a":73.0328},{"d":"Layyah","l":"Commercial Zone","f":43.0,"a":151.0768},{"d":"Layyah","l":"Economic Neighbourhood","f":21.0,"a":67.5094},{"d":"Layyah","l":"Farm to Market Road","f":1619.0,"a":6015.1605},{"d":"Layyah","l":"Green Buffer Zone","f":122.0,"a":98.273},{"d":"Layyah","l":"Institutional Zone","f":59.0,"a":392.6522},{"d":"Layyah","l":"Livestock Rearing Zone","f":1.0,"a":26.8038},{"d":"Layyah","l":"Mixed Use Zone","f":14.0,"a":38.447},{"d":"Layyah","l":"Natural Growth Boundary","f":263.0,"a":6465.683},{"d":"Layyah","l":"Preserved Forest","f":7.0,"a":309.7431},{"d":"Layyah","l":"Recreational Zone","f":19.0,"a":299.6937},{"d":"Layyah","l":"Residential Zone","f":1560.0,"a":5788.9106},{"d":"Layyah","l":"Road Widening","f":970.0,"a":329.7405},{"d":"Layyah","l":"Structure Plan Road","f":380.0,"a":339.2851},{"d":"Layyah","l":"Truck Terminal","f":4.0,"a":118.6822},{"d":"Layyah","l":"Urban Forest","f":5.0,"a":59.3331},{"d":"Layyah","l":"Water Body Buffer Zone","f":21.0,"a":6731.5582},{"d":"Lodhran","l":"Agro Industry Zone","f":28.0,"a":710.076},{"d":"Lodhran","l":"Bus and Truck Terminal","f":2.0,"a":24.0468},{"d":"Lodhran","l":"Bypass or Ring Road","f":89.0,"a":572.388},{"d":"Lodhran","l":"City Park and Open Spaces","f":35.0,"a":123.6978},{"d":"Lodhran","l":"Commercial Zone","f":24.0,"a":129.1959},{"d":"Lodhran","l":"Economic Zone","f":40.0,"a":841.1043},{"d":"Lodhran","l":"Educational Zone","f":9.0,"a":227.7795},{"d":"Lodhran","l":"Farm to Market Road","f":1152.0,"a":3160.0107},{"d":"Lodhran","l":"Green Buffer Zone","f":3.0,"a":11.5711},{"d":"Lodhran","l":"Health Zone","f":12.0,"a":213.9137},{"d":"Lodhran","l":"Industrial Zone","f":1.0,"a":47.7867},{"d":"Lodhran","l":"Institutional Zone","f":15.0,"a":117.9278},{"d":"Lodhran","l":"Natural Growth Boundary","f":248.0,"a":2637.04},{"d":"Lodhran","l":"Recreational Zone","f":26.0,"a":294.7433},{"d":"Lodhran","l":"Residential Zone","f":556.0,"a":4461.6258},{"d":"Lodhran","l":"Road Widening","f":7.0,"a":0.0004},{"d":"Lodhran","l":"Structure Plan Road","f":813.0,"a":485.549},{"d":"Lodhran","l":"Urban Forest","f":1.0,"a":16.4636},{"d":"Mandi Bahauddin","l":"Bypass or Ring Road","f":165.0,"a":613.9889},{"d":"Mandi Bahauddin","l":"CBD Zone","f":2.0,"a":87.8359},{"d":"Mandi Bahauddin","l":"Commercial Zone","f":6.0,"a":108.0613},{"d":"Mandi Bahauddin","l":"Farm to Market Road","f":311.0,"a":796.2533},{"d":"Mandi Bahauddin","l":"Green Buffer Zone","f":25.0,"a":758.0655},{"d":"Mandi Bahauddin","l":"HTL Buffer Zone","f":231.0,"a":2954.814},{"d":"Mandi Bahauddin","l":"Industrial Zone","f":6.0,"a":439.3796},{"d":"Mandi Bahauddin","l":"Institutional Zone","f":5.0,"a":180.2545},{"d":"Mandi Bahauddin","l":"Mixed Use Zone","f":2.0,"a":96.3743},{"d":"Mandi Bahauddin","l":"Recreational Zone","f":1.0,"a":40.7699},{"d":"Mandi Bahauddin","l":"Residential Zone","f":115.0,"a":4918.3926},{"d":"Mandi Bahauddin","l":"Road Widening","f":8.0,"a":22.0853},{"d":"Mandi Bahauddin","l":"Structure Plan Road","f":273.0,"a":417.2039},{"d":"Mianwali","l":"Bypass or Ring Road","f":6.0,"a":562.4312},{"d":"Mianwali","l":"City Park and Open Spaces","f":4.0,"a":41.5827},{"d":"Mianwali","l":"Commercial Zone","f":40.0,"a":727.8816},{"d":"Mianwali","l":"Economic Zone","f":1.0,"a":190.5433},{"d":"Mianwali","l":"Educational Neighbourhood","f":1.0,"a":32.8102},{"d":"Mianwali","l":"Educational Zone","f":17.0,"a":339.1861},{"d":"Mianwali","l":"Farm to Market Road","f":23.0,"a":1799.4214},{"d":"Mianwali","l":"Health Neighbourhood","f":4.0,"a":39.2397},{"d":"Mianwali","l":"Health Zone","f":10.0,"a":170.767},{"d":"Mianwali","l":"HTL Buffer Zone","f":60.0,"a":3156.7333},{"d":"Mianwali","l":"Industrial Zone","f":3.0,"a":233.7329},{"d":"Mianwali","l":"Institutional Zone","f":16.0,"a":348.0944},{"d":"Mianwali","l":"Landfill Site","f":14.0,"a":99.0373},{"d":"Mianwali","l":"Mixed Use Zone","f":1.0,"a":119.7733},{"d":"Mianwali","l":"Natural Growth Boundary","f":262.0,"a":7048.3008},{"d":"Mianwali","l":"Recreational Zone","f":4.0,"a":84.6669},{"d":"Mianwali","l":"Residential Zone","f":157.0,"a":9775.0113},{"d":"Mianwali","l":"Road Widening","f":59.0,"a":193.3184},{"d":"Mianwali","l":"Structure Plan Road","f":58.0,"a":675.723},{"d":"Mianwali","l":"Water Body Buffer Zone","f":19.0,"a":897.1047},{"d":"Multan","l":"Bypass or Ring Road","f":49.0,"a":258.6877},{"d":"Multan","l":"CBD Zone","f":11.0,"a":1061.8775},{"d":"Multan","l":"City Park and Open Spaces","f":4.0,"a":29.8449},{"d":"Multan","l":"Commercial Zone","f":4.0,"a":64.1996},{"d":"Multan","l":"Economic Neighbourhood","f":2.0,"a":137.7167},{"d":"Multan","l":"Educational Neighbourhood","f":5.0,"a":1195.0876},{"d":"Multan","l":"Educational Zone","f":1.0,"a":43.9257},{"d":"Multan","l":"Farm Housing Zone","f":59.0,"a":903.8029},{"d":"Multan","l":"Green Buffer Zone","f":12.0,"a":875.1584},{"d":"Multan","l":"Health Neighbourhood","f":5.0,"a":922.0089},{"d":"Multan","l":"Health Zone","f":2.0,"a":63.0347},{"d":"Multan","l":"High Density Residential Zone","f":6.0,"a":1182.5722},{"d":"Multan","l":"Industrial Corridor","f":5.0,"a":1321.5489},{"d":"Multan","l":"Industrial Zone","f":7.0,"a":2671.6633},{"d":"Multan","l":"Institutional Zone","f":4.0,"a":205.3991},{"d":"Multan","l":"Inter City Service Corridor","f":1.0,"a":32.8981},{"d":"Multan","l":"IT Neighbourhood","f":7.0,"a":275.8231},{"d":"Multan","l":"Light Industrial Zone","f":11.0,"a":1399.094},{"d":"Multan","l":"Mixed Use Zone","f":9.0,"a":156.1809},{"d":"Multan","l":"Residential Zone","f":468.0,"a":28715.2041},{"d":"Multan","l":"Structure Plan Road","f":343.0,"a":870.2823},{"d":"Multan","l":"Trade Zone","f":2.0,"a":1179.0001},{"d":"Multan","l":"Wholesale Market Zone","f":3.0,"a":753.0566},{"d":"Murree","l":"Agro Industry Zone","f":5.0,"a":129.3433},{"d":"Murree","l":"Botanical Garden","f":2.0,"a":76.7134},{"d":"Murree","l":"Commercial Zone","f":73.0,"a":754.3001},{"d":"Murree","l":"Hospitality Zone","f":26.0,"a":427.1398},{"d":"Murree","l":"Industrial Zone","f":6.0,"a":53.2089},{"d":"Murree","l":"Institutional Zone","f":19.0,"a":216.2741},{"d":"Murree","l":"Mixed Use Hospitality Zone","f":11.0,"a":74.825},{"d":"Murree","l":"Mixed Use Zone","f":3.0,"a":66.6034},{"d":"Murree","l":"Nursery and Greenhouse Zone","f":1.0,"a":34.1474},{"d":"Murree","l":"Recreational Zone","f":16.0,"a":217.9243},{"d":"Murree","l":"Residential Zone","f":357.0,"a":5377.3414},{"d":"Murree","l":"Road Widening","f":15.0,"a":459.5422},{"d":"Murree","l":"Structure Plan Road","f":22.0,"a":139.1113},{"d":"Murree","l":"Tourism and Historical Site","f":1.0,"a":1.8626},{"d":"Murree","l":"Tourist Zone","f":13.0,"a":325.307},{"d":"Murree","l":"Water Body Buffer Zone","f":147.0,"a":1928.3825},{"d":"Murree","l":"Wildlife Sanctuary Zone","f":3.0,"a":255.1253},{"d":"Muzaffargarh","l":"Agro Industry Zone","f":1.0,"a":11.111},{"d":"Muzaffargarh","l":"Bypass or Ring Road","f":26.0,"a":606.0836},{"d":"Muzaffargarh","l":"Cattle Market","f":1.0,"a":49.0934},{"d":"Muzaffargarh","l":"City Park and Open Spaces","f":14.0,"a":237.6788},{"d":"Muzaffargarh","l":"Economic Neighbourhood","f":1.0,"a":86.8454},{"d":"Muzaffargarh","l":"Educational Neighbourhood","f":7.0,"a":279.1273},{"d":"Muzaffargarh","l":"Educational Zone","f":7.0,"a":141.5297},{"d":"Muzaffargarh","l":"Health Neighbourhood","f":8.0,"a":147.8739},{"d":"Muzaffargarh","l":"Health Zone","f":6.0,"a":19.7772},{"d":"Muzaffargarh","l":"HTL Buffer Zone","f":167.0,"a":2975.6944},{"d":"Muzaffargarh","l":"Industrial Zone","f":6.0,"a":1791.8204},{"d":"Muzaffargarh","l":"Institutional Neighbourhood","f":4.0,"a":88.0778},{"d":"Muzaffargarh","l":"Institutional Zone","f":2.0,"a":243.9011},{"d":"Muzaffargarh","l":"Natural Growth Boundary","f":177.0,"a":13199.4948},{"d":"Muzaffargarh","l":"Residential Zone","f":60.0,"a":12404.0819},{"d":"Muzaffargarh","l":"Road Widening","f":50.0,"a":944.6448},{"d":"Muzaffargarh","l":"Structure Plan Road","f":27.0,"a":175.6576},{"d":"Muzaffargarh","l":"Transport Terminal","f":5.0,"a":44.5711},{"d":"Muzaffargarh","l":"Waste Water Treatment Plant","f":1.0,"a":315.7995},{"d":"Narowal","l":"Bypass or Ring Road","f":1.0,"a":353.848},{"d":"Narowal","l":"Farm Housing Zone","f":4.0,"a":348.7775},{"d":"Narowal","l":"Farm to Market Road","f":1.0,"a":324.1093},{"d":"Narowal","l":"Green Buffer Zone","f":18.0,"a":5471.3456},{"d":"Narowal","l":"Industrial Zone","f":3.0,"a":362.8343},{"d":"Narowal","l":"IT and Industrial Park","f":1.0,"a":291.6169},{"d":"Narowal","l":"Natural Growth Boundary","f":9.0,"a":3011.1631},{"d":"Narowal","l":"Recreational Zone","f":2.0,"a":405.7765},{"d":"Narowal","l":"Residential Zone","f":63.0,"a":2944.0528},{"d":"Narowal","l":"Structure Plan Road","f":1.0,"a":274.3437},{"d":"Okara","l":"Agro Industry Zone","f":3.0,"a":276.4135},{"d":"Okara","l":"Bypass or Ring Road","f":4.0,"a":632.6058},{"d":"Okara","l":"Cattle Market","f":1.0,"a":5.8337},{"d":"Okara","l":"City Park and Open Spaces","f":2.0,"a":64.8385},{"d":"Okara","l":"Commercial Zone","f":7.0,"a":80.2263},{"d":"Okara","l":"Educational Neighbourhood","f":1.0,"a":96.1236},{"d":"Okara","l":"Farm Housing Zone","f":5.0,"a":3476.9178},{"d":"Okara","l":"Health Neighbourhood","f":1.0,"a":91.0778},{"d":"Okara","l":"HTL Buffer Zone","f":56.0,"a":1598.9742},{"d":"Okara","l":"Industrial Zone","f":4.0,"a":660.319},{"d":"Okara","l":"Institutional Zone","f":3.0,"a":333.7945},{"d":"Okara","l":"Livestock Rearing Zone","f":1.0,"a":138.4149},{"d":"Okara","l":"Mixed Use Zone","f":4.0,"a":247.8817},{"d":"Okara","l":"Natural Growth Boundary","f":2.0,"a":3.1954},{"d":"Okara","l":"Residential Zone","f":144.0,"a":12756.8602},{"d":"Okara","l":"Structure Plan Road","f":45.0,"a":845.7957},{"d":"Okara","l":"Transport Terminal","f":2.0,"a":15.4304},{"d":"Okara","l":"Veg , Fruit and Grain Market or Timber Market","f":6.0,"a":124.9468},{"d":"Pakpattan","l":"Agro Industry Zone","f":5.0,"a":105.8389},{"d":"Pakpattan","l":"Bypass or Ring Road","f":3.0,"a":501.1898},{"d":"Pakpattan","l":"Farm to Market Road","f":36.0,"a":1848.0894},{"d":"Pakpattan","l":"Green Buffer Zone","f":11.0,"a":60.0278},{"d":"Pakpattan","l":"Institutional Zone","f":1.0,"a":52.0836},{"d":"Pakpattan","l":"Natural Growth Boundary","f":57.0,"a":1968.723},{"d":"Pakpattan","l":"Recreational Zone","f":2.0,"a":69.301},{"d":"Pakpattan","l":"Residential Zone","f":282.0,"a":7685.3648},{"d":"Pakpattan","l":"Structure Plan Road","f":63.0,"a":661.2767},{"d":"Rahim Yar Khan","l":"Agro Industry Zone","f":11.0,"a":636.064},{"d":"Rahim Yar Khan","l":"Bypass or Ring Road","f":12.0,"a":2298.602},{"d":"Rahim Yar Khan","l":"CBD Zone","f":5.0,"a":452.9809},{"d":"Rahim Yar Khan","l":"Commercial Zone","f":35.0,"a":802.8719},{"d":"Rahim Yar Khan","l":"Educational Neighbourhood","f":3.0,"a":223.0421},{"d":"Rahim Yar Khan","l":"Farm Housing Zone","f":1.0,"a":455.6599},{"d":"Rahim Yar Khan","l":"Health Neighbourhood","f":4.0,"a":463.4117},{"d":"Rahim Yar Khan","l":"High Density Residential Zone","f":11.0,"a":2528.8281},{"d":"Rahim Yar Khan","l":"Hospitality Zone","f":2.0,"a":417.664},{"d":"Rahim Yar Khan","l":"HTL Buffer Zone","f":150.0,"a":1760.862},{"d":"Rahim Yar Khan","l":"Industrial Zone","f":1.0,"a":0.0201},{"d":"Rahim Yar Khan","l":"Institutional Zone","f":8.0,"a":288.2757},{"d":"Rahim Yar Khan","l":"Recreational Zone","f":7.0,"a":655.5102},{"d":"Rahim Yar Khan","l":"Relocation Zone","f":1.0,"a":140.72},{"d":"Rahim Yar Khan","l":"Residential Zone","f":236.0,"a":13882.3792},{"d":"Rahim Yar Khan","l":"Sports Complex","f":2.0,"a":476.5373},{"d":"Rahim Yar Khan","l":"Structure Plan Road","f":167.0,"a":1205.3693},{"d":"Rahim Yar Khan","l":"Tourism and Historical Site","f":4.0,"a":0.03},{"d":"Rajanpur","l":"Agro Industry Zone","f":13.0,"a":368.6626},{"d":"Rajanpur","l":"Bypass or Ring Road","f":14.0,"a":330.4209},{"d":"Rajanpur","l":"CBD Zone","f":8.0,"a":141.1588},{"d":"Rajanpur","l":"Educational Zone","f":2.0,"a":63.4106},{"d":"Rajanpur","l":"Farm to Market Road","f":39.0,"a":2779.5063},{"d":"Rajanpur","l":"Hospitality Zone","f":1.0,"a":58.6229},{"d":"Rajanpur","l":"Institutional Zone","f":8.0,"a":198.6505},{"d":"Rajanpur","l":"Recreational Zone","f":2.0,"a":30.9921},{"d":"Rajanpur","l":"Residential Zone","f":315.0,"a":7854.7135},{"d":"Rajanpur","l":"Road Widening","f":3.0,"a":1.4512},{"d":"Rajanpur","l":"Structure Plan Road","f":66.0,"a":715.9733},{"d":"Rawalpindi","l":"Agro Industry Zone","f":3.0,"a":15067.8687},{"d":"Rawalpindi","l":"Botanical Garden","f":1.0,"a":1913.1127},{"d":"Rawalpindi","l":"Bus Terminal","f":2.0,"a":420.4595},{"d":"Rawalpindi","l":"Bypass or Ring Road","f":1.0,"a":915.4174},{"d":"Rawalpindi","l":"CBD Zone","f":2.0,"a":952.1601},{"d":"Rawalpindi","l":"City Park and Open Spaces","f":4.0,"a":774.1564},{"d":"Rawalpindi","l":"Economic Neighbourhood","f":8.0,"a":3026.4212},{"d":"Rawalpindi","l":"Educational Neighbourhood","f":10.0,"a":3588.9287},{"d":"Rawalpindi","l":"Environmental Sensitive Area","f":10.0,"a":3696.766},{"d":"Rawalpindi","l":"Expo and Sports Zone","f":1.0,"a":487.1658},{"d":"Rawalpindi","l":"Farm Housing Zone","f":9.0,"a":33223.6966},{"d":"Rawalpindi","l":"Fish Farming Zone","f":1.0,"a":2369.496},{"d":"Rawalpindi","l":"Green Buffer Zone","f":4.0,"a":3196.7622},{"d":"Rawalpindi","l":"Health Neighbourhood","f":6.0,"a":2683.3511},{"d":"Rawalpindi","l":"High Density Residential Zone","f":4.0,"a":2647.485},{"d":"Rawalpindi","l":"Hospitality Zone","f":1.0,"a":141.0614},{"d":"Rawalpindi","l":"Industrial Zone","f":1.0,"a":4091.9194},{"d":"Rawalpindi","l":"Institutional Zone","f":5.0,"a":1781.5506},{"d":"Rawalpindi","l":"IT Neighbourhood","f":6.0,"a":4552.0621},{"d":"Rawalpindi","l":"Livestock Rearing Zone","f":5.0,"a":8420.0229},{"d":"Rawalpindi","l":"Mixed Use Commercial Zone","f":3.0,"a":971.411},{"d":"Rawalpindi","l":"No Construction Zone","f":13.0,"a":1163.6423},{"d":"Rawalpindi","l":"Nursery and Greenhouse Zone","f":2.0,"a":6389.1625},{"d":"Rawalpindi","l":"Organic Farming Zone","f":5.0,"a":12084.4746},{"d":"Rawalpindi","l":"Outlet Mall Zone","f":4.0,"a":1250.3097},{"d":"Rawalpindi","l":"Recreational Resort and Country Club Zone","f":3.0,"a":1736.3617},{"d":"Rawalpindi","l":"Recreational Zone","f":3.0,"a":1985.505},{"d":"Rawalpindi","l":"Relocation Zone","f":1.0,"a":1310.0338},{"d":"Rawalpindi","l":"Residential Zone","f":88.0,"a":41834.5494},{"d":"Rawalpindi","l":"Road Widening","f":24.0,"a":1196.9324},{"d":"Rawalpindi","l":"Special Economic Zone","f":1.0,"a":844.1243},{"d":"Rawalpindi","l":"Structure Plan Road","f":38.0,"a":2684.6596},{"d":"Rawalpindi","l":"Warehouse and Freight Terminal","f":2.0,"a":1345.5318},{"d":"Rawalpindi","l":"Water Body Buffer Zone","f":58.0,"a":6791.3213},{"d":"Rawalpindi","l":"Zoological Garden","f":3.0,"a":2744.486},{"d":"Sahiwal","l":"Agro Industry Zone","f":15.0,"a":1072.1221},{"d":"Sahiwal","l":"Beekeeping Zone","f":3.0,"a":100.3563},{"d":"Sahiwal","l":"Bus and Truck Terminal","f":3.0,"a":15.2175},{"d":"Sahiwal","l":"Bypass or Ring Road","f":168.0,"a":494.1826},{"d":"Sahiwal","l":"Cattle Market","f":1.0,"a":13.5584},{"d":"Sahiwal","l":"CBD Zone","f":1.0,"a":359.049},{"d":"Sahiwal","l":"City Park and Open Spaces","f":1.0,"a":37.9317},{"d":"Sahiwal","l":"Commercial Zone","f":8.0,"a":169.2513},{"d":"Sahiwal","l":"Educational Neighbourhood","f":6.0,"a":416.4117},{"d":"Sahiwal","l":"Expo Center","f":2.0,"a":0.0016},{"d":"Sahiwal","l":"Farm Housing Zone","f":2.0,"a":1341.8732},{"d":"Sahiwal","l":"Green Buffer Zone","f":3.0,"a":140.8819},{"d":"Sahiwal","l":"Health Neighbourhood","f":3.0,"a":408.3744},{"d":"Sahiwal","l":"Health Zone","f":1.0,"a":33.9073},{"d":"Sahiwal","l":"HTL Buffer Zone","f":300.0,"a":2884.9305},{"d":"Sahiwal","l":"Industrial Zone","f":6.0,"a":272.6814},{"d":"Sahiwal","l":"Institutional Zone","f":1.0,"a":148.0629},{"d":"Sahiwal","l":"Landfill Site","f":1.0,"a":43.1236},{"d":"Sahiwal","l":"Natural Growth Boundary","f":43.0,"a":2184.5357},{"d":"Sahiwal","l":"Recreational Zone","f":2.0,"a":768.3928},{"d":"Sahiwal","l":"Residential Zone","f":117.0,"a":7661.759},{"d":"Sahiwal","l":"Structure Plan Road","f":26.0,"a":790.6214},{"d":"Sahiwal","l":"Waste Water Treatment Plant","f":1.0,"a":200.9002},{"d":"Sargodha","l":"Bus and Truck Terminal","f":1.0,"a":13.0781},{"d":"Sargodha","l":"Bypass or Ring Road","f":271.0,"a":880.1613},{"d":"Sargodha","l":"CBD Zone","f":5.0,"a":243.1959},{"d":"Sargodha","l":"City Park and Open Spaces","f":1.0,"a":40.2063},{"d":"Sargodha","l":"Commercial Zone","f":2.0,"a":51.3963},{"d":"Sargodha","l":"Economic Zone","f":1.0,"a":64.5814},{"d":"Sargodha","l":"Educational Zone","f":3.0,"a":35.1095},{"d":"Sargodha","l":"Industrial Zone","f":1.0,"a":94.232},{"d":"Sargodha","l":"Institutional Zone","f":7.0,"a":123.629},{"d":"Sargodha","l":"Mixed Use Zone","f":8.0,"a":213.4219},{"d":"Sargodha","l":"Natural Growth Boundary","f":80.0,"a":378.0669},{"d":"Sargodha","l":"Recreational Zone","f":1.0,"a":177.8684},{"d":"Sargodha","l":"Residential Zone","f":1134.0,"a":18996.2725},{"d":"Sargodha","l":"Road Widening","f":14.0,"a":13.054},{"d":"Sargodha","l":"Structure Plan Road","f":568.0,"a":696.8076},{"d":"Sargodha","l":"Veg , Fruit and Grain Market or Timber Market","f":1.0,"a":12.485},{"d":"Sargodha","l":"Wholesale Market Zone","f":1.0,"a":39.5885},{"d":"Sialkot","l":"Agro Industry Zone","f":3.0,"a":609.057},{"d":"Sialkot","l":"Bypass or Ring Road","f":3.0,"a":957.8483},{"d":"Sialkot","l":"CBD Zone","f":2.0,"a":737.9261},{"d":"Sialkot","l":"Commercial Zone","f":1.0,"a":163.3542},{"d":"Sialkot","l":"Educational Neighbourhood","f":10.0,"a":1413.9587},{"d":"Sialkot","l":"Farm Housing Zone","f":127.0,"a":5775.6118},{"d":"Sialkot","l":"Green Buffer Zone","f":20.0,"a":948.4784},{"d":"Sialkot","l":"Health Neighbourhood","f":62.0,"a":1597.5996},{"d":"Sialkot","l":"HTL Buffer Zone","f":222.0,"a":1916.7718},{"d":"Sialkot","l":"Industrial Zone","f":19.0,"a":1956.5111},{"d":"Sialkot","l":"Institutional Zone","f":27.0,"a":498.7303},{"d":"Sialkot","l":"IT Neighbourhood","f":19.0,"a":767.5533},{"d":"Sialkot","l":"Landfill Site","f":1.0,"a":67.4321},{"d":"Sialkot","l":"Livestock Rearing Zone","f":22.0,"a":741.5273},{"d":"Sialkot","l":"Mixed Use Zone","f":79.0,"a":892.8847},{"d":"Sialkot","l":"Residential Zone","f":4.0,"a":2532.3612},{"d":"Sialkot","l":"Recreational Zone","f":1.0,"a":1215.2438},{"d":"Sialkot","l":"Relocation Zone","f":8.0,"a":237.2538},{"d":"Sialkot","l":"Residential Zone","f":1396.0,"a":31718.5548},{"d":"Sialkot","l":"Road Widening","f":14.0,"a":672.0237},{"d":"Sialkot","l":"Solar Farm Zone","f":7.0,"a":696.3877},{"d":"Sialkot","l":"Sports Complex","f":1.0,"a":180.4863},{"d":"Sialkot","l":"Structure Plan Road","f":92.0,"a":1417.2517},{"d":"Sialkot","l":"Transport Terminal","f":3.0,"a":79.6883},{"d":"Sialkot","l":"Waste Water Treatment Plant","f":1.0,"a":236.3008},{"d":"Sialkot","l":"Water Body Buffer Zone","f":89.0,"a":1341.4712},{"d":"Talagang","l":"Agro Industry Zone","f":11.0,"a":185.9409},{"d":"Talagang","l":"Bypass or Ring Road","f":68.0,"a":165.7425},{"d":"Talagang","l":"City Park and Open Spaces","f":1.0,"a":5.1619},{"d":"Talagang","l":"Educational Zone","f":6.0,"a":53.7516},{"d":"Talagang","l":"Farm to Market Road","f":283.0,"a":418.2478},{"d":"Talagang","l":"Freight Transport Terminal","f":1.0,"a":7.8147},{"d":"Talagang","l":"Green Buffer Zone","f":32.0,"a":26.8274},{"d":"Talagang","l":"Health Zone","f":4.0,"a":29.438},{"d":"Talagang","l":"Industrial Zone","f":8.0,"a":366.9899},{"d":"Talagang","l":"Institutional Zone","f":20.0,"a":91.4963},{"d":"Talagang","l":"Mixed Use Zone","f":36.0,"a":168.7727},{"d":"Talagang","l":"Natural Growth Boundary","f":165.0,"a":4778.3595},{"d":"Talagang","l":"Recreational Zone","f":5.0,"a":12.8514},{"d":"Talagang","l":"Relocation Zone","f":2.0,"a":4.4239},{"d":"Talagang","l":"Residential Zone","f":289.0,"a":1895.5948},{"d":"Talagang","l":"Road Widening","f":146.0,"a":25.8075},{"d":"Talagang","l":"Structure Plan Road","f":59.0,"a":49.3028},{"d":"Talagang","l":"Water Body Buffer Zone","f":1254.0,"a":10176.3334},{"d":"Taunsa Sharif","l":"Bypass or Ring Road","f":1.0,"a":79.7127},{"d":"Taunsa Sharif","l":"City Park and Open Spaces","f":2.0,"a":34.6391},{"d":"Taunsa Sharif","l":"Commercial Zone","f":1.0,"a":5.666},{"d":"Taunsa Sharif","l":"Educational Neighbourhood","f":3.0,"a":347.6742},{"d":"Taunsa Sharif","l":"Environmental Sensitive Area","f":1.0,"a":104.9444},{"d":"Taunsa Sharif","l":"Health Neighbourhood","f":3.0,"a":297.1883},{"d":"Taunsa Sharif","l":"HTL Buffer Zone","f":22.0,"a":1224.8588},{"d":"Taunsa Sharif","l":"Institutional Zone","f":1.0,"a":104.5161},{"d":"Taunsa Sharif","l":"Residential Zone","f":26.0,"a":3754.6743},{"d":"Taunsa Sharif","l":"Road Widening","f":3.0,"a":16.0067},{"d":"Taunsa Sharif","l":"Structure Plan Road","f":6.0,"a":57.8661},{"d":"Taunsa Sharif","l":"Water Body Buffer Zone","f":4.0,"a":365.95},{"d":"Toba Tek Singh","l":"Bypass or Ring Road","f":108.0,"a":451.5677},{"d":"Toba Tek Singh","l":"Commercial Zone","f":13.0,"a":221.2272},{"d":"Toba Tek Singh","l":"High Density Zone (for Industrial Area)","f":5.0,"a":215.0126},{"d":"Toba Tek Singh","l":"Industrial Zone","f":15.0,"a":934.8765},{"d":"Toba Tek Singh","l":"Mixed Use Zone","f":17.0,"a":618.8959},{"d":"Toba Tek Singh","l":"Natural Growth Boundary","f":17.0,"a":1699.8746},{"d":"Toba Tek Singh","l":"Residential Zone","f":225.0,"a":6009.8505},{"d":"Toba Tek Singh","l":"Road Widening","f":89.0,"a":121.4952},{"d":"Toba Tek Singh","l":"Structure Plan Road","f":240.0,"a":500.3632},{"d":"Vehari","l":"Bus and Truck Terminal","f":1.0,"a":10.0464},{"d":"Vehari","l":"Bus Terminal","f":2.0,"a":7.4216},{"d":"Vehari","l":"Bypass or Ring Road","f":9.0,"a":974.4532},{"d":"Vehari","l":"Cattle Market","f":2.0,"a":86.3756},{"d":"Vehari","l":"CBD Zone","f":2.0,"a":36.466},{"d":"Vehari","l":"City Park and Open Spaces","f":10.0,"a":303.1584},{"d":"Vehari","l":"Educational Neighbourhood","f":6.0,"a":134.4587},{"d":"Vehari","l":"Health Neighbourhood","f":12.0,"a":136.1461},{"d":"Vehari","l":"High Density Residential Zone","f":2.0,"a":32.1476},{"d":"Vehari","l":"HTL Buffer Zone","f":145.0,"a":2585.6248},{"d":"Vehari","l":"Industrial Zone","f":4.0,"a":273.7324},{"d":"Vehari","l":"Institutional Zone","f":5.0,"a":95.4956},{"d":"Vehari","l":"Inter City Service Corridor","f":40.0,"a":599.6834},{"d":"Vehari","l":"Livestock Rearing Zone","f":2.0,"a":0.0001},{"d":"Vehari","l":"Mixed Use Zone","f":5.0,"a":122.8081},{"d":"Vehari","l":"Natural Growth Boundary","f":64.0,"a":5911.9494},{"d":"Vehari","l":"Organic Farming Zone","f":4.0,"a":978.9246},{"d":"Vehari","l":"Residential Zone","f":124.0,"a":10889.6012},{"d":"Vehari","l":"Sports Complex","f":4.0,"a":90.1875},{"d":"Vehari","l":"Structure Plan Road","f":20.0,"a":146.7809},{"d":"Vehari","l":"Veg , Fruit and Grain Market or Timber Market","f":2.0,"a":39.94},{"d":"Wazirabad","l":"Bypass or Ring Road","f":21.0,"a":526.5911},{"d":"Wazirabad","l":"Cattle Market","f":1.0,"a":5.8747},{"d":"Wazirabad","l":"Commercial Zone","f":2.0,"a":51.2777},{"d":"Wazirabad","l":"Farm Housing Zone","f":1.0,"a":246.4431},{"d":"Wazirabad","l":"Green Buffer Zone","f":3.0,"a":237.5306},{"d":"Wazirabad","l":"HTL Buffer Zone","f":63.0,"a":1420.6996},{"d":"Wazirabad","l":"Livestock Rearing Zone","f":4.0,"a":104.4977},{"d":"Wazirabad","l":"Recreational Zone","f":3.0,"a":211.183},{"d":"Wazirabad","l":"Residential Zone","f":54.0,"a":2262.6273},{"d":"Wazirabad","l":"Structure Plan Road","f":31.0,"a":166.4651}];
 
-// ── STATE ────────────────────────────────────────────────────────────────────
-let allData = []; // [{district, landuse, frequency, area}, …]
+// Build lookup maps
+const data = RAW.map(r=>({district:r.d,landuse:r.l,frequency:r.f,area:r.a}));
+const districts = ['Punjab',...new Set(data.map(r=>r.district))].sort((a,b)=>a==='Punjab'?-1:a.localeCompare(b));
+const zones     = [...new Set(data.map(r=>r.landuse))].sort();
 
-// ── INIT ─────────────────────────────────────────────────────────────────────
-async function fetchCSV() {
-  try {
-    const r = await fetch(PROXY_URL);
-    if (r.ok) return await r.text();
-  } catch(e) {}
-  const r2 = await fetch(DIRECT_URL);
-  if (!r2.ok) throw new Error(`HTTP ${r2.status}`);
-  return await r2.text();
+// Populate dropdowns
+const dSel=document.getElementById('sel-district');
+dSel.innerHTML=districts.map(d=>`<option value="${d}">${d}</option>`).join('');
+const zSel=document.getElementById('sel-zone');
+zSel.innerHTML=zones.map(z=>`<option value="${z}">${z}</option>`).join('');
+
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&name==='district')||(i===1&&name==='zone')));
+  document.getElementById('panel-district').classList.toggle('active',name==='district');
+  document.getElementById('panel-zone').classList.toggle('active',name==='zone');
 }
 
-async function init() {
-  try {
-    const text = await fetchCSV();
-    allData = parseCSV(text);
+function fmt(n){return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
 
-    if (!allData.length) throw new Error('No data rows found');
-
-    setStatus(true, `${allData.length.toLocaleString()} records loaded`);
-    document.getElementById('record-count').textContent = `${allData.length.toLocaleString()} records`;
-    populateDropdowns();
-    renderDistrict();
-    renderZone();
-  } catch (err) {
-    setStatus(false, 'Failed to load data');
-    document.getElementById('error-banner').style.display = 'block';
-    document.getElementById('tbl-district').innerHTML = '<div class="msg error-msg"><div class="icon">⚠️</div>Sheet not accessible — see instructions above.</div>';
-    document.getElementById('tbl-zone').innerHTML     = '<div class="msg error-msg"><div class="icon">⚠️</div>Sheet not accessible — see instructions above.</div>';
-    console.error(err);
+function aggregateByLanduse(){
+  const map={};
+  for(const r of data){
+    if(!map[r.landuse])map[r.landuse]={landuse:r.landuse,frequency:0,area:0};
+    map[r.landuse].frequency+=r.frequency;
+    map[r.landuse].area+=r.area;
   }
+  return Object.values(map).sort((a,b)=>a.landuse.localeCompare(b.landuse));
 }
 
-// ── CSV PARSER ───────────────────────────────────────────────────────────────
-function parseCSV(text) {
-  const lines = text.trim().split('\n').map(l => l.split(',').map(c => c.trim().replace(/^"|"$/g, '')));
-  
-  // Find header row — look for a row containing 'district' or 'landuse' (case-insensitive)
-  let headerIdx = -1, headers = [];
-  for (let i = 0; i < Math.min(lines.length, 5); i++) {
-    const lower = lines[i].map(c => c.toLowerCase());
-    if (lower.includes('district') || lower.includes('landuse')) {
-      headerIdx = i; headers = lower; break;
-    }
-  }
-  if (headerIdx < 0) return [];
-
-  const di = headers.findIndex(h => h === 'district');
-  const li = headers.findIndex(h => h === 'landuse');
-  const fi = headers.findIndex(h => h.includes('freq'));
-  const ai = headers.findIndex(h => h.includes('sum') || h.includes('area'));
-
-  if (di < 0 || li < 0) return [];
-
-  const rows = [];
-  for (let i = headerIdx + 1; i < lines.length; i++) {
-    const r = lines[i];
-    if (!r[di] || !r[li]) continue;
-    rows.push({
-      district:  r[di],
-      landuse:   r[li],
-      frequency: fi >= 0 ? (parseFloat(r[fi]) || 0) : 0,
-      area:      ai >= 0 ? (parseFloat(r[ai]) || 0) : 0
-    });
-  }
-  return rows;
+function renderDistrict(){
+  const sel=document.getElementById('sel-district').value;
+  const rows=sel==='Punjab'?aggregateByLanduse():data.filter(r=>r.district===sel);
+  const tf=rows.reduce((s,r)=>s+r.frequency,0);
+  const ta=rows.reduce((s,r)=>s+r.area,0);
+  document.getElementById('sd-zones').textContent=rows.length;
+  document.getElementById('sd-count').textContent=tf.toLocaleString();
+  document.getElementById('sd-area').innerHTML=`${fmt(ta)}<span class="stat-unit">acres</span>`;
+  document.getElementById('tbl-district').innerHTML=rows.length?`
+    <table><thead><tr><th class="row-num">#</th><th>Landuse / Zone</th><th>No.</th><th>Area (acres)</th></tr></thead>
+    <tbody>${rows.map((r,i)=>`<tr><td class="row-num">${i+1}</td><td>${r.landuse}</td><td>${r.frequency.toLocaleString()}</td><td>${fmt(r.area)}</td></tr>`).join('')}</tbody>
+    <tfoot><tr><td colspan="2">TOTAL — ${sel}</td><td>${tf.toLocaleString()}</td><td>${fmt(ta)}</td></tr></tfoot>
+    </table>`:'<div class="msg">No data found.</div>';
 }
 
-// ── STATUS ───────────────────────────────────────────────────────────────────
-function setStatus(ok, msg) {
-  const dot  = document.getElementById('status-dot');
-  const text = document.getElementById('status-text');
-  dot.className = ok ? 'live' : 'error';
-  text.textContent = msg;
+function renderZone(){
+  const sel=document.getElementById('sel-zone').value;
+  const rows=data.filter(r=>r.landuse===sel);
+  const tf=rows.reduce((s,r)=>s+r.frequency,0);
+  const ta=rows.reduce((s,r)=>s+r.area,0);
+  document.getElementById('sz-districts').textContent=rows.length;
+  document.getElementById('sz-count').textContent=tf.toLocaleString();
+  document.getElementById('sz-area').innerHTML=`${fmt(ta)}<span class="stat-unit">acres</span>`;
+  document.getElementById('tbl-zone').innerHTML=rows.length?`
+    <table><thead><tr><th class="row-num">#</th><th>District</th><th>No.</th><th>Area (acres)</th></tr></thead>
+    <tbody>${rows.map((r,i)=>`<tr><td class="row-num">${i+1}</td><td>${r.district}</td><td>${r.frequency.toLocaleString()}</td><td>${fmt(r.area)}</td></tr>`).join('')}</tbody>
+    <tfoot><tr><td colspan="2">TOTAL — ${sel}</td><td>${tf.toLocaleString()}</td><td>${fmt(ta)}</td></tr></tfoot>
+    </table>`:'<div class="msg">No data found.</div>';
 }
 
-// ── DROPDOWNS ────────────────────────────────────────────────────────────────
-function populateDropdowns() {
-  // Districts
-  const districts = ['Punjab', ...new Set(allData.map(r => r.district))].sort((a,b) => a === 'Punjab' ? -1 : a.localeCompare(b));
-  const dSel = document.getElementById('sel-district');
-  dSel.innerHTML = districts.map(d => `<option value="${d}">${d}</option>`).join('');
-
-  // Zones
-  const zones = [...new Set(allData.map(r => r.landuse))].sort();
-  const zSel = document.getElementById('sel-zone');
-  zSel.innerHTML = zones.map(z => `<option value="${z}">${z}</option>`).join('');
-}
-
-// ── TABS ─────────────────────────────────────────────────────────────────────
-function switchTab(name) {
-  document.querySelectorAll('.tab').forEach((t, i) => {
-    t.classList.toggle('active', (i === 0 && name === 'district') || (i === 1 && name === 'zone'));
-  });
-  document.getElementById('panel-district').classList.toggle('active', name === 'district');
-  document.getElementById('panel-zone').classList.toggle('active', name === 'zone');
-}
-
-// ── BY DISTRICT ───────────────────────────────────────────────────────────────
-function renderDistrict() {
-  const sel  = document.getElementById('sel-district').value;
-  const rows = sel === 'Punjab' ? aggregateByLanduse() : allData.filter(r => r.district === sel);
-
-  const totalZones = rows.length;
-  const totalFreq  = rows.reduce((s, r) => s + r.frequency, 0);
-  const totalArea  = rows.reduce((s, r) => s + r.area, 0);
-
-  document.getElementById('sd-zones').textContent = totalZones;
-  document.getElementById('sd-count').textContent = totalFreq.toLocaleString();
-  document.getElementById('sd-area').innerHTML    = `${fmt(totalArea)}<span class="stat-unit">acres</span>`;
-
-  const html = rows.length ? `
-    <table>
-      <thead><tr>
-        <th class="row-num">#</th>
-        <th>Landuse / Zone</th>
-        <th>No.</th>
-        <th>Area (acres)</th>
-      </tr></thead>
-      <tbody>
-        ${rows.map((r, i) => `
-          <tr>
-            <td class="row-num">${i + 1}</td>
-            <td>${r.landuse}</td>
-            <td>${r.frequency.toLocaleString()}</td>
-            <td>${fmt(r.area)}</td>
-          </tr>`).join('')}
-      </tbody>
-      <tfoot><tr>
-        <td colspan="2">TOTAL — ${sel}</td>
-        <td>${totalFreq.toLocaleString()}</td>
-        <td>${fmt(totalArea)}</td>
-      </tr></tfoot>
-    </table>` : '<div class="msg">No data for this selection.</div>';
-
-  document.getElementById('tbl-district').innerHTML = html;
-}
-
-function aggregateByLanduse() {
-  const map = {};
-  for (const r of allData) {
-    if (!map[r.landuse]) map[r.landuse] = { landuse: r.landuse, frequency: 0, area: 0 };
-    map[r.landuse].frequency += r.frequency;
-    map[r.landuse].area      += r.area;
-  }
-  return Object.values(map).sort((a, b) => a.landuse.localeCompare(b.landuse));
-}
-
-// ── BY ZONE ───────────────────────────────────────────────────────────────────
-function renderZone() {
-  const sel  = document.getElementById('sel-zone').value;
-  const rows = allData.filter(r => r.landuse === sel);
-
-  const totalDist = rows.length;
-  const totalFreq = rows.reduce((s, r) => s + r.frequency, 0);
-  const totalArea = rows.reduce((s, r) => s + r.area, 0);
-
-  document.getElementById('sz-districts').textContent = totalDist;
-  document.getElementById('sz-count').textContent     = totalFreq.toLocaleString();
-  document.getElementById('sz-area').innerHTML        = `${fmt(totalArea)}<span class="stat-unit">acres</span>`;
-
-  const html = rows.length ? `
-    <table>
-      <thead><tr>
-        <th class="row-num">#</th>
-        <th>District</th>
-        <th>No.</th>
-        <th>Area (acres)</th>
-      </tr></thead>
-      <tbody>
-        ${rows.map((r, i) => `
-          <tr>
-            <td class="row-num">${i + 1}</td>
-            <td>${r.district}</td>
-            <td>${r.frequency.toLocaleString()}</td>
-            <td>${fmt(r.area)}</td>
-          </tr>`).join('')}
-      </tbody>
-      <tfoot><tr>
-        <td colspan="2">TOTAL — ${sel}</td>
-        <td>${totalFreq.toLocaleString()}</td>
-        <td>${fmt(totalArea)}</td>
-      </tr></tfoot>
-    </table>` : '<div class="msg">No data for this selection.</div>';
-
-  document.getElementById('tbl-zone').innerHTML = html;
-}
-
-// ── UTILS ─────────────────────────────────────────────────────────────────────
-function fmt(n) {
-  return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-
-// ── KICK OFF ──────────────────────────────────────────────────────────────────
-init();
+// Auto-render first selection
+renderDistrict();
+renderZone();
 </script>
 </body>
 </html>
