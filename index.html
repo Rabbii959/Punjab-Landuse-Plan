@@ -74,15 +74,17 @@ table{width:100%;border-collapse:collapse;font-size:13.5px}
 thead tr{background:var(--green-pale)}
 thead th{padding:13px 16px;text-align:left;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--green-dark);font-family:'DM Mono',monospace;border-bottom:2px solid var(--green-border);font-weight:600}
 thead th:not(:first-child){text-align:right}
+thead th.th-left{text-align:left!important}
+thead th.th-num{text-align:right}
 tbody tr{border-bottom:1px solid var(--border);transition:background .12s}
 tbody tr:last-child{border-bottom:none}
 tbody tr:hover{background:var(--green-pale)}
-tbody td{padding:12px 16px;color:var(--text)}
-tbody td:not(:first-child){text-align:right;font-family:'DM Mono',monospace;font-size:13px;color:var(--text-mid)}
-tbody td:first-child{font-weight:500}
+tbody td{padding:12px 16px;color:var(--text);text-align:left}
+tbody td.td-right{text-align:right;font-family:'DM Mono',monospace;font-size:13px;color:var(--text-mid)}
+tbody td.td-left{text-align:left;font-weight:500;color:var(--text)}
 tfoot tr{background:var(--gold-light);border-top:2px solid var(--gold)}
 tfoot td{padding:13px 16px;font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--gold)}
-tfoot td:not(:first-child){text-align:right}
+tfoot td.td-right{text-align:right}
 .rn{color:var(--text-dim)!important;font-size:11px!important;font-family:'DM Mono',monospace;width:40px;font-weight:400!important}
 .msg{text-align:center;padding:60px 20px;color:var(--text-dim);font-size:14px}
 
@@ -239,11 +241,16 @@ function aggByLanduse(){
   return Object.values(m).sort((a,b)=>a.landuse.localeCompare(b.landuse));
 }
 
-function buildTable(cols, rows, totLabel, tf, ta){
-  const hdrs = cols.map((c,i)=>`<th${i>0?' style="text-align:right"':''}>${c}</th>`).join('');
-  const body = rows.map((r,i)=>`<tr><td class="rn">${i+1}</td>${r.map((v,j)=>`<td${j>0?' style="text-align:right;font-family:DM Mono,monospace"':''}>${v}</td>`).join('')}</tr>`).join('');
-  return `<table><thead><tr><th class="rn">#</th>${hdrs}</tr></thead><tbody>${body}</tbody>
-    <tfoot><tr><td colspan="2">${totLabel}</td><td style="text-align:right">${fmtN(tf)}</td><td style="text-align:right">${fmt(ta)}</td></tr></tfoot></table>`;
+function buildTable(cols, colTypes, rows, totLabel, tf, ta){
+  // colTypes: 'l' = left text, 'r' = right number
+  const hdrs = cols.map((c,i)=>`<th class="${colTypes[i]==='l'?'th-left':'th-num'}">${c}</th>`).join('');
+  const body = rows.map((r,i)=>`<tr><td class="rn">${i+1}</td>${r.map((v,j)=>`<td class="${colTypes[j]==='l'?'td-left':'td-right'}">${v}</td>`).join('')}</tr>`).join('');
+  const tfootSpan = cols.length - 2; // span all label cols, leave last 2 for numbers
+  return `<table>
+    <thead><tr><th class="rn">#</th>${hdrs}</tr></thead>
+    <tbody>${body}</tbody>
+    <tfoot><tr><td colspan="${tfootSpan+1}">${totLabel}</td><td class="td-right">${fmtN(tf)}</td><td class="td-right">${fmt(ta)}</td></tr></tfoot>
+  </table>`;
 }
 
 // ── LUP BY DISTRICT ──
@@ -255,7 +262,7 @@ function renderDistrict(){
   document.getElementById('sd-count').textContent=fmtN(tf);
   document.getElementById('sd-area').innerHTML=`${fmt(ta)}<span class="stat-unit">acres</span>`;
   document.getElementById('tbl-district').innerHTML = rows.length
-    ? buildTable(['Landuse / Zone','No.','Area (acres)'],rows.map(r=>[r.landuse,fmtN(r.frequency),fmt(r.area)]),`TOTAL — ${sel}`,tf,ta)
+    ? buildTable(['Landuse / Zone','No.','Area (acres)'],['l','r','r'],rows.map(r=>[r.landuse,fmtN(r.frequency),fmt(r.area)]),`TOTAL — ${sel}`,tf,ta)
     : '<div class="msg">No data.</div>';
 }
 
@@ -268,7 +275,7 @@ function renderZone(){
   document.getElementById('sz-count').textContent=fmtN(tf);
   document.getElementById('sz-area').innerHTML=`${fmt(ta)}<span class="stat-unit">acres</span>`;
   document.getElementById('tbl-zone').innerHTML = rows.length
-    ? buildTable(['District','No.','Area (acres)'],rows.map(r=>[r.district,fmtN(r.frequency),fmt(r.area)]),`TOTAL — ${sel}`,tf,ta)
+    ? buildTable(['District','No.','Area (acres)'],['l','r','r'],rows.map(r=>[r.district,fmtN(r.frequency),fmt(r.area)]),`TOTAL — ${sel}`,tf,ta)
     : '<div class="msg">No data.</div>';
 }
 
@@ -280,25 +287,26 @@ document.getElementById('luc-mode').onchange = function(){
 function renderLUC(){
   const mode=document.getElementById('luc-mode').value;
   const sel=document.getElementById('sel-luc').value;
-  let rows, col1, totLabel;
+  let rows;
   if(mode==='byLanduse'){
     rows=luc.filter(r=>r.landuse===sel);
-    col1='District'; totLabel=`TOTAL — ${sel}`;
     document.getElementById('luc-lbl1').textContent='Districts Found';
   } else {
     rows=luc.filter(r=>r.district===sel);
-    col1='Landuse Category'; totLabel=`TOTAL — ${sel}`;
     document.getElementById('luc-lbl1').textContent='Landuse Categories';
   }
   const tf=rows.reduce((s,r)=>s+r.no,0), ta=rows.reduce((s,r)=>s+r.area,0);
   document.getElementById('luc-s1').textContent=rows.length;
   document.getElementById('luc-s2').textContent=fmtN(tf);
   document.getElementById('luc-s3').innerHTML=`${fmt(ta)}<span class="stat-unit">acres</span>`;
-  const display = mode==='byLanduse'
-    ? rows.map(r=>[r.district, fmtN(r.no), fmt(r.area)])
-    : rows.map(r=>[r.landuse, fmtN(r.no), fmt(r.area)]);
+  // Always show full Excel format: Landuse | District | No | Area
   document.getElementById('tbl-luc').innerHTML = rows.length
-    ? buildTable([col1,'No.','Area (acres)'], display, totLabel, tf, ta)
+    ? buildTable(
+        ['Landuse','District','No.','Area (acres)'],
+        ['l','l','r','r'],
+        rows.map(r=>[r.landuse, r.district, fmtN(r.no), fmt(r.area)]),
+        `TOTAL — ${sel}`, tf, ta
+      )
     : '<div class="msg">No data found.</div>';
 }
 
