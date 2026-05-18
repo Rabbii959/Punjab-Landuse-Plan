@@ -325,17 +325,27 @@
 // ── CONFIG ──────────────────────────────────────────────────────────────────
 const SHEET_ID  = '1Ipwd9qDLVvfDX0u6r9T3J5ap4iwjPVVdxgs3amSU2iE';
 const SHEET_GID = '1346643398';
-const CSV_URL   = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${SHEET_GID}`;
+const DIRECT_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${SHEET_GID}`;
+const PROXY_URL  = `https://corsproxy.io/?url=${encodeURIComponent(DIRECT_URL)}`;
+const CSV_URL    = PROXY_URL;
 
 // ── STATE ────────────────────────────────────────────────────────────────────
 let allData = []; // [{district, landuse, frequency, area}, …]
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
+async function fetchCSV() {
+  try {
+    const r = await fetch(PROXY_URL);
+    if (r.ok) return await r.text();
+  } catch(e) {}
+  const r2 = await fetch(DIRECT_URL);
+  if (!r2.ok) throw new Error(`HTTP ${r2.status}`);
+  return await r2.text();
+}
+
 async function init() {
   try {
-    const res = await fetch(CSV_URL);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const text = await res.text();
+    const text = await fetchCSV();
     allData = parseCSV(text);
 
     if (!allData.length) throw new Error('No data rows found');
