@@ -21,15 +21,17 @@ body{background:var(--bg);color:var(--text);font-family:Tahoma,Geneva,sans-serif
 .fixed-top{position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 2px 16px rgba(26,71,49,.18)}
 
 /* ── HEADER (compact, with logos) ── */
-header{background:linear-gradient(135deg,var(--green-dark) 0%,var(--green-mid) 100%);padding:12px 8px;position:relative;overflow:hidden}
+header{background:linear-gradient(135deg,var(--green-dark) 0%,var(--green-mid) 100%);padding:12px 34px;position:relative;overflow:hidden}
 header::after{content:'';position:absolute;right:-60px;top:-30px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
-.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;z-index:1}
+.header-inner{width:100%;max-width:none;margin:0 auto;display:grid;grid-template-columns:150px 1fr 150px;align-items:center;gap:16px;position:relative;z-index:1}
 
 /* Logos */
-.header-logo{height:90px;width:auto;object-fit:contain;flex-shrink:0}
+.header-logo{height:88px;width:auto;max-width:132px;object-fit:contain;justify-self:center;flex-shrink:0}
+.header-logo.left-logo{justify-self:start}
+.header-logo.right-logo{justify-self:end}
 
 /* Centre block */
-.header-centre{flex:1;display:flex;align-items:center;justify-content:center;gap:20px;text-align:left}
+.header-centre{grid-column:2;display:flex;align-items:center;justify-content:center;gap:20px;text-align:center}
 .header-text-block{}
 .header-authority{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.65);font-family:Tahoma,Geneva,sans-serif;margin-bottom:2px}
 .header-title{font-family:Tahoma,Geneva,sans-serif;font-size:clamp(22px,2.8vw,36px);color:#fff;line-height:1.1;font-weight:700}
@@ -98,8 +100,12 @@ footer .f-sub{color:rgba(255,255,255,.75);font-size:12px;font-family:Tahoma,Gene
 /* ── RESPONSIVE ── */
 @media(max-width:640px){
   .stats-row{grid-template-columns:1fr 1fr}
+  header{padding:10px 16px}
+  .header-inner{grid-template-columns:70px 1fr 70px;gap:8px}
   .header-stats{display:none}
-  .header-logo{height:56px}
+  .header-logo{height:56px;max-width:66px}
+  .header-title{font-size:20px}
+  .header-sub{font-size:10px}
   .main{padding:20px 16px}
   .nav-inner{padding:0 8px}
   .tab{padding:10px 12px;font-size:13px}
@@ -114,20 +120,23 @@ footer .f-sub{color:rgba(255,255,255,.75);font-size:12px;font-family:Tahoma,Gene
 <!-- HEADER -->
 <header>
   <div class="header-inner">
-    <!-- Left Logo: PMU -->
-    <img class="header-logo" src="https://pmu-lgcdd.gop.pk/wp-content/uploads/2025/02/PMU-LOGO-1-150x150.png" alt="PMU Logo" onerror="this.style.display='none'">
+    <!-- Left Logo: Government of Punjab -->
+    <img class="header-logo left-logo" src="https://pmu-lgcdd.gop.pk/wp-content/uploads/2025/02/GOVT-LOGO-1-150x150.png" alt="Government of Punjab Logo" onerror="this.style.display='none'">
 
     <!-- Centre: title + stats -->
     <div class="header-centre">
       <div class="header-text-block">
-        <div class="header-title"><span>Data Analytics Dashboard<span> of Land Use Plans</div>
+        <div class="header-title"><span>Data Analytics Dashboard</span> of Land Use Plans</div>
         <div class="header-sub">District wise Land Use Classification &amp; Zoning Plans of Punjab</div>
       </div>
-          
+      <div class="header-stats">
+        <div class="hstat"><div class="hstat-num">104</div><div class="hstat-lbl">Zones</div></div>
+        <div class="hstat"><div class="hstat-num">61</div><div class="hstat-lbl">Landuses</div></div>
       </div>
     </div>
-    <!-- Right Logo: Govt of Punjab -->
-    <img class="header-logo" src="https://pmu-lgcdd.gop.pk/wp-content/uploads/2025/02/GOVT-LOGO-1-150x150.png" alt="Govt of Punjab Logo" onerror="this.style.display='none'">
+
+    <!-- Right Logo: PMU -->
+    <img class="header-logo right-logo" src="https://pmu-lgcdd.gop.pk/wp-content/uploads/2025/02/PMU-LOGO-1-150x150.png" alt="PMU Logo" onerror="this.style.display='none'">
   </div>
 </header>
 
