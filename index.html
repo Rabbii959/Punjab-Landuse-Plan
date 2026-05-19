@@ -21,9 +21,9 @@ body{background:var(--bg);color:var(--text);font-family:Tahoma,Geneva,sans-serif
 .fixed-top{position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 2px 16px rgba(26,71,49,.18)}
 
 /* ── HEADER (compact, with logos) ── */
-header{background:linear-gradient(135deg,var(--green-dark) 0%,var(--green-mid) 100%);padding:12px 28px;position:relative;overflow:hidden}
+header{background:linear-gradient(135deg,var(--green-dark) 0%,var(--green-mid) 100%);padding:12px 8px;position:relative;overflow:hidden}
 header::after{content:'';position:absolute;right:-60px;top:-30px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
-.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;position:relative;z-index:1}
+.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;z-index:1}
 
 /* Logos */
 .header-logo{height:90px;width:auto;object-fit:contain;flex-shrink:0}
@@ -32,7 +32,7 @@ header::after{content:'';position:absolute;right:-60px;top:-30px;width:200px;hei
 .header-centre{flex:1;display:flex;align-items:center;justify-content:center;gap:24px;text-align:left}
 .header-text-block{}
 .header-authority{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.65);font-family:Tahoma,Geneva,sans-serif;margin-bottom:2px}
-.header-title{font-family:Tahoma,Geneva,sans-serif;font-size:clamp(24px,2.8vw,36px);color:#fff;line-height:1.1;font-weight:700}
+.header-title{font-family:Tahoma,Geneva,sans-serif;font-size:clamp(22px,2.8vw,36px);color:#fff;line-height:1.1;font-weight:700}
 .header-title span{color:#f5e9c4}
 .header-sub{font-size:12px;color:rgba(255,255,255,.6);letter-spacing:.4px;margin-top:3px}
 
