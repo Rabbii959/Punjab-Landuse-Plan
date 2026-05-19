@@ -21,13 +21,14 @@ body{background:var(--bg);color:var(--text);font-family:Tahoma,Geneva,sans-serif
 .fixed-top{position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 2px 16px rgba(26,71,49,.18)}
 
 /* ── HEADER (compact, with logos) ── */
-header{background:linear-gradient(135deg,var(--green-dark) 0%,var(--green-mid) 100%);padding:12px 34px;position:relative;overflow:hidden}
+header{background:linear-gradient(135deg,#27563c 0%,#4f7f58 55%,#5f8f67 100%);padding:12px 34px;position:relative;overflow:hidden}
+header::before{content:'';position:absolute;left:-50px;top:-30px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.05);pointer-events:none}
 header::after{content:'';position:absolute;right:-60px;top:-30px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
 .header-inner{width:100%;max-width:none;margin:0 auto;display:grid;grid-template-columns:150px 1fr 150px;align-items:center;gap:16px;position:relative;z-index:1}
 
 /* Logos */
-.header-logo{height:88px;width:auto;max-width:132px;object-fit:contain;justify-self:center;flex-shrink:0}
-.header-logo.left-logo{justify-self:start}
+.header-logo{height:88px;width:auto;max-width:132px;object-fit:contain;justify-self:center;flex-shrink:0;padding:8px;border-radius:16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);box-shadow:0 4px 16px rgba(0,0,0,.14)}
+.header-logo.left-logo{justify-self:start;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);border-radius:50%;padding:10px;box-shadow:0 3px 14px rgba(0,0,0,.16)}
 .header-logo.right-logo{justify-self:end}
 
 /* Centre block */
@@ -91,6 +92,13 @@ tfoot td{padding:13px 16px;font-family:Tahoma,Geneva,sans-serif;font-size:13px;f
 tfoot td.td-right{text-align:right}
 .rn{color:var(--text-dim)!important;font-size:12px!important;font-family:Tahoma,Geneva,sans-serif;width:40px;font-weight:400!important}
 .msg{text-align:center;padding:60px 20px;color:var(--text-dim);font-size:15px;font-family:Tahoma,Geneva,sans-serif}
+.content-grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(300px,1fr);gap:18px;align-items:start}
+.chart-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:var(--shadow);min-height:420px}
+.chart-title{font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--green-dark);font-weight:700;font-family:Tahoma,Geneva,sans-serif;margin-bottom:6px}
+.chart-sub{font-size:11px;color:var(--text-dim);font-family:Tahoma,Geneva,sans-serif;margin-bottom:12px}
+.bar-svg{display:block;width:100%;height:auto}
+.chart-note{margin-top:10px;font-size:11px;color:var(--text-dim);font-family:Tahoma,Geneva,sans-serif}
+.no-chart{display:flex;align-items:center;justify-content:center;min-height:180px;color:var(--text-dim);font-size:14px;text-align:center}
 
 /* ── FOOTER ── */
 footer{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:var(--green-dark);text-align:center;padding:10px 24px;box-shadow:0 -2px 12px rgba(26,71,49,.15);line-height:1.6}
@@ -98,12 +106,17 @@ footer strong{color:#fff;font-size:15px;font-weight:700;font-family:Tahoma,Genev
 footer .f-sub{color:rgba(255,255,255,.75);font-size:12px;font-family:Tahoma,Geneva,sans-serif}
 
 /* ── RESPONSIVE ── */
+@media(max-width:980px){
+  .content-grid{grid-template-columns:1fr}
+  .chart-card{min-height:auto}
+}
+
 @media(max-width:640px){
   .stats-row{grid-template-columns:1fr 1fr}
   header{padding:10px 16px}
   .header-inner{grid-template-columns:70px 1fr 70px;gap:8px}
   .header-stats{display:none}
-  .header-logo{height:56px;max-width:66px}
+  .header-logo{height:56px;max-width:66px;padding:4px}
   .header-title{font-size:20px}
   .header-sub{font-size:10px}
   .main{padding:20px 16px}
@@ -131,7 +144,7 @@ footer .f-sub{color:rgba(255,255,255,.75);font-size:12px;font-family:Tahoma,Gene
       </div>
       <div class="header-stats">
         <div class="hstat"><div class="hstat-num">104</div><div class="hstat-lbl">Zones</div></div>
-        <div class="hstat"><div class="hstat-num">61</div><div class="hstat-lbl">Landuses</div></div>
+        <div class="hstat"><div class="hstat-num">61</div><div class="hstat-lbl">Land Uses</div></div>
       </div>
     </div>
 
@@ -143,9 +156,9 @@ footer .f-sub{color:rgba(255,255,255,.75);font-size:12px;font-family:Tahoma,Gene
 <!-- TABS -->
 <div class="nav-wrap">
   <div class="nav-inner">
-     <div class="tab" onclick="switchTab('luc')">📊 Landuse Classification Stats</div>
-    <div class="tab active" onclick="switchTab('district')">🗺 Landuse Plan Stats</div>
-    <div class="tab" onclick="switchTab('zone')">🏷 Zone Wise Stats</div>
+     <div class="tab" data-tab="luc" onclick="switchTab('luc')">📊 Land Use Classification Stats</div>
+    <div class="tab active" data-tab="district" onclick="switchTab('district')">🗺 Land Use Plan Stats</div>
+    <div class="tab" data-tab="zone" onclick="switchTab('zone')">🏷 Zone Wise Stats</div>
     </div>
 </div>
 
@@ -165,7 +178,7 @@ footer .f-sub{color:rgba(255,255,255,.75);font-size:12px;font-family:Tahoma,Gene
       <div class="stat-card"><div class="stat-lbl">Total Count (No.)</div><div class="stat-val" id="sd-count">—</div></div>
       <div class="stat-card gold"><div class="stat-lbl">Total Area</div><div class="stat-val" id="sd-area">—<span class="stat-unit">acres</span></div></div>
     </div>
-    <div class="table-wrap" id="tbl-district"><div class="msg">Select a district to view its land use zones</div></div>
+    <div class="content-grid"><div class="table-wrap" id="tbl-district"><div class="msg">Select a district to view its land use zones</div></div><div class="chart-card" id="chart-district"><div class="no-chart">Bar chart will appear here</div></div></div>
   </div>
 
   <!-- TAB 2: LUP BY ZONE -->
@@ -179,7 +192,7 @@ footer .f-sub{color:rgba(255,255,255,.75);font-size:12px;font-family:Tahoma,Gene
       <div class="stat-card"><div class="stat-lbl">Total Count (No.)</div><div class="stat-val" id="sz-count">—</div></div>
       <div class="stat-card gold"><div class="stat-lbl">Total Area</div><div class="stat-val" id="sz-area">—<span class="stat-unit">acres</span></div></div>
     </div>
-    <div class="table-wrap" id="tbl-zone"><div class="msg">Select a zone to see which districts have it</div></div>
+    <div class="content-grid"><div class="table-wrap" id="tbl-zone"><div class="msg">Select a zone to see which districts have it</div></div><div class="chart-card" id="chart-zone"><div class="no-chart">Bar chart will appear here</div></div></div>
   </div>
 
   <!-- TAB 3: LUC SUMMARY -->
@@ -198,7 +211,7 @@ footer .f-sub{color:rgba(255,255,255,.75);font-size:12px;font-family:Tahoma,Gene
       <div class="stat-card"><div class="stat-lbl">Total Count (No.)</div><div class="stat-val" id="luc-s2">—</div></div>
       <div class="stat-card gold"><div class="stat-lbl">Total Area</div><div class="stat-val" id="luc-s3">—<span class="stat-unit">acres</span></div></div>
     </div>
-    <div class="table-wrap" id="tbl-luc"><div class="msg">Select a category or district to view LUC data</div></div>
+    <div class="content-grid"><div class="table-wrap" id="tbl-luc"><div class="msg">Select a category or district to view LUC data</div></div><div class="chart-card" id="chart-luc"><div class="no-chart">Bar chart will appear here</div></div></div>
   </div>
 
 </div>
@@ -230,12 +243,41 @@ function populateLUCSelect(){
 
 function switchTab(name){
   const names=['district','zone','luc'];
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',names[i]===name));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
   names.forEach(n=>document.getElementById('panel-'+n).classList.toggle('active',n===name));
 }
 
 function fmt(n){return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function fmtN(n){return Math.round(n).toLocaleString('en-US');}
+function escapeHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function aggregateChartItems(items){
+  const m={};
+  items.forEach(it=>{
+    if(!m[it.label]) m[it.label]=0;
+    m[it.label]+=Number(it.value)||0;
+  });
+  return Object.entries(m).map(([label,value])=>({label,value}));
+}
+function buildBarChartCard(title, subtitle, items){
+  const chartItems = aggregateChartItems(items).sort((a,b)=>b.value-a.value).slice(0,10);
+  if(!chartItems.length){
+    return `<div class="chart-title">${escapeHtml(title)}</div><div class="no-chart">No chart data available</div>`;
+  }
+  const maxVal = Math.max(...chartItems.map(i=>i.value),1);
+  const rowH = 34, leftPad = 8, labelW = 135, barArea = 170, valueX = 325, topPad = 10, trackH = 16;
+  const height = topPad + chartItems.length * rowH + 6;
+  const rows = chartItems.map((it,idx)=>{
+    const y = topPad + idx*rowH;
+    const barW = Math.max(8,(it.value/maxVal)*barArea);
+    const label = escapeHtml(it.label.length>22 ? it.label.slice(0,21)+'…' : it.label);
+    const val = fmt(it.value);
+    return `<text x="${leftPad}" y="${y+12}" font-size="11" font-family="Tahoma, Geneva, sans-serif" fill="#3d5c4a">${label}</text>
+      <rect x="${leftPad+labelW}" y="${y}" width="${barArea}" height="${trackH}" rx="8" fill="#edf7f2"></rect>
+      <rect x="${leftPad+labelW}" y="${y}" width="${barW}" height="${trackH}" rx="8" fill="#2d7a52"></rect>
+      <text x="${valueX}" y="${y+12}" text-anchor="end" font-size="11" font-family="Tahoma, Geneva, sans-serif" fill="#b8952a">${val}</text>`;
+  }).join('');
+  return `<div class="chart-title">${escapeHtml(title)}</div><div class="chart-sub">Top ${chartItems.length} records by area (acres)</div><svg class="bar-svg" viewBox="0 0 340 ${height}" aria-label="${escapeHtml(title)} bar chart">${rows}</svg><div class="chart-note">Values shown in acres.</div>`;
+}
 
 function aggByLanduse(){
   const m={};
@@ -265,8 +307,9 @@ function renderDistrict(){
   document.getElementById('sd-count').textContent=fmtN(tf);
   document.getElementById('sd-area').innerHTML=`${fmt(ta)}<span class="stat-unit">acres</span>`;
   document.getElementById('tbl-district').innerHTML = rows.length
-    ? buildTable(['Landuse / Zone','No.','Area (acres)'],['l','r','r'],rows.map(r=>[r.landuse,fmtN(r.frequency),fmt(r.area)]),`TOTAL — ${sel}`,tf,ta)
+    ? buildTable(['Land Use / Zone','No.','Area (acres)'],['l','r','r'],rows.map(r=>[r.landuse,fmtN(r.frequency),fmt(r.area)]),`TOTAL — ${sel}`,tf,ta)
     : '<div class="msg">No data.</div>';
+  document.getElementById('chart-district').innerHTML = buildBarChartCard(`Land Use Distribution — ${sel}`, 'Top land use zones by area', rows.map(r=>({label:r.landuse,value:r.area})));
 }
 
 function renderZone(){
@@ -279,6 +322,7 @@ function renderZone(){
   document.getElementById('tbl-zone').innerHTML = rows.length
     ? buildTable(['District','No.','Area (acres)'],['l','r','r'],rows.map(r=>[r.district,fmtN(r.frequency),fmt(r.area)]),`TOTAL — ${sel}`,tf,ta)
     : '<div class="msg">No data.</div>';
+  document.getElementById('chart-zone').innerHTML = buildBarChartCard(`Zone Wise Distribution — ${sel}`, 'Top districts by area', rows.map(r=>({label:r.district,value:r.area})));
 }
 
 document.getElementById('luc-mode').onchange = function(){ populateLUCSelect(); renderLUC(); };
@@ -289,7 +333,7 @@ function renderLUC(){
   let rows;
   if(mode==='byDistrict'){
     rows = sel==='Punjab' ? [...luc] : luc.filter(r=>r.d===sel);
-    document.getElementById('luc-lbl1').textContent='Landuse Categories';
+    document.getElementById('luc-lbl1').textContent='Land Use Categories';
   } else {
     rows = luc.filter(r=>r.c===sel);
     document.getElementById('luc-lbl1').textContent='Records Found';
@@ -301,12 +345,13 @@ function renderLUC(){
   document.getElementById('luc-s3').innerHTML=`${fmt(ta)}<span class="stat-unit">acres</span>`;
   document.getElementById('tbl-luc').innerHTML = rows.length
     ? buildTable(
-        ['LU Class','Landuse','No.','Area (acres)'],
+        ['LU Class','Land Use','No.','Area (acres)'],
         ['l','l','r','r'],
         rows.map(r=>[r.c, r.l, fmtN(r.n), fmt(r.a)]),
         `TOTAL — ${sel}`, tf, ta
       )
     : '<div class="msg">No data found.</div>';
+  document.getElementById('chart-luc').innerHTML = buildBarChartCard(mode==='byDistrict' ? `Land Use Classification — ${sel}` : `Class Wise Distribution — ${sel}`, mode==='byDistrict' ? 'Top land use categories by area' : 'Top districts by area', rows.map(r=>({label: mode==='byDistrict' ? r.l : r.d, value:r.a})));
 }
 
 renderDistrict(); renderZone(); renderLUC();
