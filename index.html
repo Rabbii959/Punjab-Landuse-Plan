@@ -179,7 +179,7 @@ footer .f-sub{color:rgba(255,255,255,.75);font-size:10px;font-family:Tahoma,Gene
       <select id="sel-zone" onchange="renderZone()" style="display:none"></select>
     </div>
     <div class="stats-row">
-      <div class="stat-card"><div class="stat-lbl">Zone Types</div><div class="stat-val" id="sd-zones">—</div></div>
+      <div class="stat-card"><div class="stat-lbl" id="sd-lbl1">Zone Types</div><div class="stat-val" id="sd-zones">—</div></div>
       <div class="stat-card"><div class="stat-lbl">Total Count (No.)</div><div class="stat-val" id="sd-count">—</div></div>
       <div class="stat-card gold"><div class="stat-lbl">Total Area</div><div class="stat-val" id="sd-area">—<span class="stat-unit">acres</span></div></div>
     </div>
@@ -193,6 +193,7 @@ footer .f-sub{color:rgba(255,255,255,.75);font-size:10px;font-family:Tahoma,Gene
       <select id="luc-mode" onchange="renderLUC()">
         <option value="byDistrict">By District</option>
         <option value="byClass">By LU Class</option>
+        <option value="byLandUse">By Land Use</option>
       </select>
       <span class="ctrl-label">Select</span>
       <select id="sel-luc" onchange="renderLUC()"></select>
@@ -221,6 +222,7 @@ const lupDistricts = ['Punjab',...new Set(lup.map(r=>r.district))].sort((a,b)=>a
 const lupZones     = [...new Set(lup.map(r=>r.landuse))].sort();
 const lucDistricts = ['Punjab',...new Set(luc.map(r=>r.d))].sort((a,b)=>a==='Punjab'?-1:a.localeCompare(b));
 const lucClasses   = [...new Set(luc.map(r=>r.c))].sort();
+const lucLandUses  = [...new Set(luc.map(r=>r.l))].sort();
 
 document.getElementById('sel-district').innerHTML = lupDistricts.map(d=>`<option value="${d}">${d}</option>`).join('');
 document.getElementById('sel-zone').innerHTML     = lupZones.map(z=>`<option value="${z}">${z}</option>`).join('');
@@ -228,7 +230,14 @@ populateLUCSelect();
 
 function populateLUCSelect(){
   const mode = document.getElementById('luc-mode').value;
-  const opts = mode==='byDistrict' ? lucDistricts : lucClasses;
+  let opts;
+  if(mode==='byDistrict'){
+    opts = lucDistricts;
+  }else if(mode==='byClass'){
+    opts = lucClasses;
+  }else{
+    opts = lucLandUses;
+  }
   document.getElementById('sel-luc').innerHTML = opts.map(o=>`<option value="${o}">${o}</option>`).join('');
 }
 
@@ -306,6 +315,7 @@ function toggleLUPMode(){
 }
 
 function renderDistrict(){
+  document.getElementById('sd-lbl1').textContent='Zone Types';
   const sel=document.getElementById('sel-district').value;
   const rows=sel==='Punjab'?aggByLanduse():lup.filter(r=>r.district===sel);
   const tf=rows.reduce((s,r)=>s+r.frequency,0), ta=rows.reduce((s,r)=>s+r.area,0);
@@ -319,6 +329,7 @@ function renderDistrict(){
 }
 
 function renderZone(){
+  document.getElementById('sd-lbl1').textContent='Districts';
   const sel=document.getElementById('sel-zone').value;
   const rows=lup.filter(r=>r.landuse===sel);
   const tf=rows.reduce((s,r)=>s+r.frequency,0), ta=rows.reduce((s,r)=>s+r.area,0);
@@ -340,27 +351,48 @@ function renderLUC(){
   const mode=document.getElementById('luc-mode').value;
   const sel =document.getElementById('sel-luc').value;
   let rows;
+
   if(mode==='byDistrict'){
     rows = sel==='Punjab' ? [...luc] : luc.filter(r=>r.d===sel);
     document.getElementById('luc-lbl1').textContent='Land Use Categories';
-  } else {
+    document.getElementById('luc-s1').textContent=[...new Set(rows.map(r=>r.l))].length;
+  }else if(mode==='byClass'){
     rows = luc.filter(r=>r.c===sel);
-    document.getElementById('luc-lbl1').textContent='Records Found';
+    document.getElementById('luc-lbl1').textContent='Districts';
+    document.getElementById('luc-s1').textContent=[...new Set(rows.map(r=>r.d))].length;
+  }else{
+    rows = luc.filter(r=>r.l===sel);
+    document.getElementById('luc-lbl1').textContent='Districts';
+    document.getElementById('luc-s1').textContent=[...new Set(rows.map(r=>r.d))].length;
   }
-  rows.sort((a,b)=>a.c.localeCompare(b.c)||a.l.localeCompare(b.l));
+
+  rows.sort((a,b)=>a.d.localeCompare(b.d)||a.c.localeCompare(b.c)||a.l.localeCompare(b.l));
   const tf=rows.reduce((s,r)=>s+r.n,0), ta=rows.reduce((s,r)=>s+r.a,0);
-  document.getElementById('luc-s1').textContent=rows.length;
+
   document.getElementById('luc-s2').textContent=fmtN(tf);
   document.getElementById('luc-s3').innerHTML=`${fmt(ta)}<span class="stat-unit">acres</span>`;
+
   document.getElementById('tbl-luc').innerHTML = rows.length
     ? buildTable(
-        ['LU Class','Land Use','No.','Area (acres)'],
-        ['l','l','r','r'],
-        rows.map(r=>[r.c, r.l, fmtN(r.n), fmt(r.a)]),
+        ['District','LU Class','Land Use','No.','Area (acres)'],
+        ['l','l','l','r','r'],
+        rows.map(r=>[r.d, r.c, r.l, fmtN(r.n), fmt(r.a)]),
         `TOTAL — ${sel}`, tf, ta
       )
     : '<div class="msg">No data found.</div>';
-  document.getElementById('chart-luc').innerHTML = buildBarChartCard(mode==='byDistrict' ? `Land Use Classification — ${sel}` : `Class Wise Distribution — ${sel}`, mode==='byDistrict' ? 'Top land use categories by area' : 'Top districts by area', rows.map(r=>({label: mode==='byDistrict' ? r.l : r.d, value:r.a})));
+
+  const chartLabel = mode==='byDistrict' ? 'l' : 'd';
+  const chartTitle = mode==='byDistrict'
+    ? `Land Use Classification — ${sel}`
+    : mode==='byClass'
+      ? `LU Class Distribution — ${sel}`
+      : `Land Use Distribution — ${sel}`;
+
+  document.getElementById('chart-luc').innerHTML = buildBarChartCard(
+    chartTitle,
+    mode==='byDistrict' ? 'Top land uses by area' : 'Top districts by area',
+    rows.map(r=>({label:r[chartLabel], value:r.a}))
+  );
 }
 
 renderDistrict(); renderLUC();
