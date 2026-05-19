@@ -158,7 +158,6 @@ footer .f-sub{color:rgba(255,255,255,.75);font-size:12px;font-family:Tahoma,Gene
   <div class="nav-inner">
      <div class="tab" data-tab="luc" onclick="switchTab('luc')">📊 Land Use Classification Stats</div>
     <div class="tab active" data-tab="district" onclick="switchTab('district')">🗺 Land Use Plan Stats</div>
-    <div class="tab" data-tab="zone" onclick="switchTab('zone')">🏷 Zone Wise Stats</div>
     </div>
 </div>
 
@@ -170,8 +169,14 @@ footer .f-sub{color:rgba(255,255,255,.75);font-size:12px;font-family:Tahoma,Gene
   <!-- TAB 1: LUP BY DISTRICT -->
   <div class="panel active" id="panel-district">
     <div class="controls-bar">
-      <span class="ctrl-label">Select District</span>
+      <span class="ctrl-label">View By</span>
+      <select id="lup-mode" onchange="toggleLUPMode()">
+        <option value="byDistrict">By District</option>
+        <option value="byZone">By Zone</option>
+      </select>
+      <span class="ctrl-label" id="lup-select-label">Select District</span>
       <select id="sel-district" onchange="renderDistrict()"></select>
+      <select id="sel-zone" onchange="renderZone()" style="display:none"></select>
     </div>
     <div class="stats-row">
       <div class="stat-card"><div class="stat-lbl">Zone Types</div><div class="stat-val" id="sd-zones">—</div></div>
@@ -181,21 +186,7 @@ footer .f-sub{color:rgba(255,255,255,.75);font-size:12px;font-family:Tahoma,Gene
     <div class="content-grid"><div class="table-wrap" id="tbl-district"><div class="msg">Select a district to view its land use zones</div></div><div class="chart-card" id="chart-district"><div class="no-chart">Bar chart will appear here</div></div></div>
   </div>
 
-  <!-- TAB 2: LUP BY ZONE -->
-  <div class="panel" id="panel-zone">
-    <div class="controls-bar">
-      <span class="ctrl-label">Select Zone</span>
-      <select id="sel-zone" onchange="renderZone()"></select>
-    </div>
-    <div class="stats-row">
-      <div class="stat-card"><div class="stat-lbl">Districts with Zone</div><div class="stat-val" id="sz-dist">—</div></div>
-      <div class="stat-card"><div class="stat-lbl">Total Count (No.)</div><div class="stat-val" id="sz-count">—</div></div>
-      <div class="stat-card gold"><div class="stat-lbl">Total Area</div><div class="stat-val" id="sz-area">—<span class="stat-unit">acres</span></div></div>
-    </div>
-    <div class="content-grid"><div class="table-wrap" id="tbl-zone"><div class="msg">Select a zone to see which districts have it</div></div><div class="chart-card" id="chart-zone"><div class="no-chart">Bar chart will appear here</div></div></div>
-  </div>
-
-  <!-- TAB 3: LUC SUMMARY -->
+  <!-- TAB 2: LUC SUMMARY -->
   <div class="panel" id="panel-luc">
     <div class="controls-bar">
       <span class="ctrl-label">View By</span>
@@ -242,7 +233,7 @@ function populateLUCSelect(){
 }
 
 function switchTab(name){
-  const names=['district','zone','luc'];
+  const names=['district','luc'];
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
   names.forEach(n=>document.getElementById('panel-'+n).classList.toggle('active',n===name));
 }
@@ -299,6 +290,21 @@ function buildTable(cols, colTypes, rows, totLabel, tf, ta){
   </table>`;
 }
 
+function toggleLUPMode(){
+  const mode = document.getElementById('lup-mode').value;
+  const isDistrict = mode === 'byDistrict';
+
+  document.getElementById('lup-select-label').textContent = isDistrict ? 'Select District' : 'Select Zone';
+  document.getElementById('sel-district').style.display = isDistrict ? '' : 'none';
+  document.getElementById('sel-zone').style.display = isDistrict ? 'none' : '';
+
+  if(isDistrict){
+    renderDistrict();
+  }else{
+    renderZone();
+  }
+}
+
 function renderDistrict(){
   const sel=document.getElementById('sel-district').value;
   const rows=sel==='Punjab'?aggByLanduse():lup.filter(r=>r.district===sel);
@@ -316,13 +322,16 @@ function renderZone(){
   const sel=document.getElementById('sel-zone').value;
   const rows=lup.filter(r=>r.landuse===sel);
   const tf=rows.reduce((s,r)=>s+r.frequency,0), ta=rows.reduce((s,r)=>s+r.area,0);
-  document.getElementById('sz-dist').textContent=rows.length;
-  document.getElementById('sz-count').textContent=fmtN(tf);
-  document.getElementById('sz-area').innerHTML=`${fmt(ta)}<span class="stat-unit">acres</span>`;
-  document.getElementById('tbl-zone').innerHTML = rows.length
+
+  document.getElementById('sd-zones').textContent=rows.length;
+  document.getElementById('sd-count').textContent=fmtN(tf);
+  document.getElementById('sd-area').innerHTML=`${fmt(ta)}<span class="stat-unit">acres</span>`;
+
+  document.getElementById('tbl-district').innerHTML = rows.length
     ? buildTable(['District','No.','Area (acres)'],['l','r','r'],rows.map(r=>[r.district,fmtN(r.frequency),fmt(r.area)]),`TOTAL — ${sel}`,tf,ta)
     : '<div class="msg">No data.</div>';
-  document.getElementById('chart-zone').innerHTML = buildBarChartCard(`Zone Wise Distribution — ${sel}`, 'Top districts by area', rows.map(r=>({label:r.district,value:r.area})));
+
+  document.getElementById('chart-district').innerHTML = buildBarChartCard(`Zone Wise Distribution — ${sel}`, 'Top districts by area', rows.map(r=>({label:r.district,value:r.area})));
 }
 
 document.getElementById('luc-mode').onchange = function(){ populateLUCSelect(); renderLUC(); };
@@ -354,7 +363,7 @@ function renderLUC(){
   document.getElementById('chart-luc').innerHTML = buildBarChartCard(mode==='byDistrict' ? `Land Use Classification — ${sel}` : `Class Wise Distribution — ${sel}`, mode==='byDistrict' ? 'Top land use categories by area' : 'Top districts by area', rows.map(r=>({label: mode==='byDistrict' ? r.l : r.d, value:r.a})));
 }
 
-renderDistrict(); renderZone(); renderLUC();
+renderDistrict(); renderLUC();
 
 // Set body padding to match fixed header height
 function setTopPadding(){
