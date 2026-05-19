@@ -21,13 +21,13 @@ body{background:var(--bg);color:var(--text);font-family:Tahoma,Geneva,sans-serif
 .fixed-top{position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 2px 16px rgba(26,71,49,.18)}
 
 /* ── HEADER (compact, with logos) ── */
-header{background:linear-gradient(135deg,#27563c 0%,#4f7f58 55%,#5f8f67 100%);padding:12px 34px;position:relative;overflow:hidden}
-header::before{content:'';position:absolute;left:-50px;top:-30px;width:200px;height:200px;border-radius:50%;background:#ffffff;pointer-events:none}
-header::after{content:'';position:absolute;right:-60px;top:-30px;width:200px;height:200px;border-radius:50%;background:#ffffff;pointer-events:none}
+header{background:linear-gradient(135deg,#27563c 0%,#4f7f58 55%,#5f8f67 100%);padding:6px 34px;position:relative;overflow:hidden}
+header::before{content:'';position:absolute;left:-50px;top:-30px;width:170px;height:170px;border-radius:50%;background:#ffffff;pointer-events:none}
+header::after{content:'';position:absolute;right:-60px;top:-30px;width:170px;height:170px;border-radius:50%;background:#ffffff;pointer-events:none}
 .header-inner{width:100%;max-width:none;margin:0 auto;display:grid;grid-template-columns:150px 1fr 150px;align-items:center;gap:16px;position:relative;z-index:1}
 
 /* Logos */
-.header-logo{height:88px;width:auto;max-width:132px;object-fit:contain;justify-self:center;flex-shrink:0;background:transparent;border:none;box-shadow:none;padding:0}
+.header-logo{height:70px;width:auto;max-width:112px;object-fit:contain;justify-self:center;flex-shrink:0;background:transparent;border:none;box-shadow:none;padding:0}
 .header-logo.left-logo{justify-self:start;background:transparent;border:none;box-shadow:none;padding:0}
 .header-logo.right-logo{justify-self:end;background:transparent;border:none;box-shadow:none;padding:0}
 
@@ -35,14 +35,14 @@ header::after{content:'';position:absolute;right:-60px;top:-30px;width:200px;hei
 .header-centre{grid-column:2;display:flex;align-items:center;justify-content:center;gap:20px;text-align:center}
 .header-text-block{}
 .header-authority{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.65);font-family:Tahoma,Geneva,sans-serif;margin-bottom:2px}
-.header-title{font-family:Tahoma,Geneva,sans-serif;font-size:clamp(22px,2.8vw,36px);color:#fff;line-height:1.1;font-weight:700}
+.header-title{font-family:Tahoma,Geneva,sans-serif;font-size:clamp(21px,2.65vw,34px);color:#fff;line-height:1.05;font-weight:700}
 .header-title span{color:#f5e9c4}
-.header-sub{font-size:12px;color:rgba(255,255,255,.6);letter-spacing:.4px;margin-top:3px}
+.header-sub{font-size:15px;color:rgba(255,255,255,.78);letter-spacing:.35px;margin-top:5px}
 
 /* Stats */
 .header-stats{display:flex;gap:10px;flex-shrink:0}
-.hstat{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:8px 18px;text-align:center;min-width:75px}
-.hstat-num{font-family:Tahoma,Geneva,sans-serif;font-size:20px;color:#fff;line-height:1;font-weight:700}
+.hstat{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:6px 16px;text-align:center;min-width:72px}
+.hstat-num{font-family:Tahoma,Geneva,sans-serif;font-size:18px;color:#fff;line-height:1;font-weight:700}
 .hstat-lbl{font-size:10px;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:1.2px;margin-top:3px}
 
 /* ── NAV TABS ── */
@@ -113,12 +113,12 @@ footer .f-sub{color:rgba(255,255,255,.75);font-size:10px;font-family:Tahoma,Gene
 
 @media(max-width:640px){
   .stats-row{grid-template-columns:1fr 1fr}
-  header{padding:10px 16px}
+  header{padding:6px 16px}
   .header-inner{grid-template-columns:70px 1fr 70px;gap:8px}
   .header-stats{display:none}
-  .header-logo{height:56px;max-width:66px;padding:0}
+  .header-logo{height:48px;max-width:58px;padding:0}
   .header-title{font-size:20px}
-  .header-sub{font-size:10px}
+  .header-sub{font-size:11px}
   .main{padding:20px 16px}
   .nav-inner{padding:0 8px}
   .tab{padding:10px 12px;font-size:13px}
