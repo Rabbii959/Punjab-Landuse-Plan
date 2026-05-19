@@ -22,14 +22,14 @@ body{background:var(--bg);color:var(--text);font-family:Tahoma,Geneva,sans-serif
 
 /* ── HEADER (compact, with logos) ── */
 header{background:linear-gradient(135deg,#27563c 0%,#4f7f58 55%,#5f8f67 100%);padding:12px 34px;position:relative;overflow:hidden}
-header::before{content:'';position:absolute;left:-50px;top:-30px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.05);pointer-events:none}
-header::after{content:'';position:absolute;right:-60px;top:-30px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
+header::before{content:'';position:absolute;left:-50px;top:-30px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.16);pointer-events:none}
+header::after{content:'';position:absolute;right:-60px;top:-30px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.16);pointer-events:none}
 .header-inner{width:100%;max-width:none;margin:0 auto;display:grid;grid-template-columns:150px 1fr 150px;align-items:center;gap:16px;position:relative;z-index:1}
 
 /* Logos */
-.header-logo{height:88px;width:auto;max-width:132px;object-fit:contain;justify-self:center;flex-shrink:0;padding:8px;border-radius:16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);box-shadow:0 4px 16px rgba(0,0,0,.14)}
-.header-logo.left-logo{justify-self:start;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);border-radius:50%;padding:10px;box-shadow:0 3px 14px rgba(0,0,0,.16)}
-.header-logo.right-logo{justify-self:end}
+.header-logo{height:88px;width:auto;max-width:132px;object-fit:contain;justify-self:center;flex-shrink:0;background:transparent;border:none;box-shadow:none;padding:0}
+.header-logo.left-logo{justify-self:start;background:transparent;border:none;box-shadow:none;padding:0}
+.header-logo.right-logo{justify-self:end;background:transparent;border:none;box-shadow:none;padding:0}
 
 /* Centre block */
 .header-centre{grid-column:2;display:flex;align-items:center;justify-content:center;gap:20px;text-align:center}
@@ -116,7 +116,7 @@ footer .f-sub{color:rgba(255,255,255,.75);font-size:12px;font-family:Tahoma,Gene
   header{padding:10px 16px}
   .header-inner{grid-template-columns:70px 1fr 70px;gap:8px}
   .header-stats{display:none}
-  .header-logo{height:56px;max-width:66px;padding:4px}
+  .header-logo{height:56px;max-width:66px;padding:0}
   .header-title{font-size:20px}
   .header-sub{font-size:10px}
   .main{padding:20px 16px}
