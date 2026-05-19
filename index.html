@@ -70,6 +70,8 @@ select:focus{border-color:var(--green-mid);box-shadow:0 0 0 3px rgba(45,122,82,.
 .stat-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);font-family:Tahoma,Geneva,sans-serif;margin-bottom:8px}
 .stat-val{font-family:Tahoma,Geneva,sans-serif;font-size:26px;color:var(--green-dark);font-weight:700}
 .stat-unit{font-size:12px;color:var(--text-dim);margin-left:4px;font-family:Tahoma,Geneva,sans-serif;font-weight:400}
+.stat-card.green .stat-val{color:var(--green-dark)}
+.stat-card.green{border-top:3px solid var(--green-dark)}
 .stat-card.gold .stat-val{color:var(--gold)}
 .stat-card.gold{border-top:3px solid var(--gold)}
 
@@ -179,8 +181,8 @@ footer .f-sub{color:rgba(255,255,255,.75);font-size:10px;font-family:Tahoma,Gene
       <select id="sel-zone" onchange="renderZone()" style="display:none"></select>
     </div>
     <div class="stats-row">
-      <div class="stat-card"><div class="stat-lbl" id="sd-lbl1">Zone Types</div><div class="stat-val" id="sd-zones">—</div></div>
-      <div class="stat-card"><div class="stat-lbl">Total Count (No.)</div><div class="stat-val" id="sd-count">—</div></div>
+      <div class="stat-card green"><div class="stat-lbl" id="sd-lbl1">Zone Types</div><div class="stat-val" id="sd-zones">—</div></div>
+      <div class="stat-card green"><div class="stat-lbl">Total Count (No.)</div><div class="stat-val" id="sd-count">—</div></div>
       <div class="stat-card gold"><div class="stat-lbl">Total Area</div><div class="stat-val" id="sd-area">—<span class="stat-unit">acres</span></div></div>
     </div>
     <div class="content-grid"><div class="table-wrap" id="tbl-district"><div class="msg">Select a district to view its land use zones</div></div><div class="chart-card" id="chart-district"><div class="no-chart">Bar chart will appear here</div></div></div>
@@ -199,8 +201,8 @@ footer .f-sub{color:rgba(255,255,255,.75);font-size:10px;font-family:Tahoma,Gene
       <select id="sel-luc" onchange="renderLUC()"></select>
     </div>
     <div class="stats-row">
-      <div class="stat-card"><div class="stat-lbl" id="luc-lbl1">Categories</div><div class="stat-val" id="luc-s1">—</div></div>
-      <div class="stat-card"><div class="stat-lbl">Total Count (No.)</div><div class="stat-val" id="luc-s2">—</div></div>
+      <div class="stat-card green"><div class="stat-lbl" id="luc-lbl1">Categories</div><div class="stat-val" id="luc-s1">—</div></div>
+      <div class="stat-card green"><div class="stat-lbl">Total Count (No.)</div><div class="stat-val" id="luc-s2">—</div></div>
       <div class="stat-card gold"><div class="stat-lbl">Total Area</div><div class="stat-val" id="luc-s3">—<span class="stat-unit">acres</span></div></div>
     </div>
     <div class="content-grid"><div class="table-wrap" id="tbl-luc"><div class="msg">Select a category or district to view LUC data</div></div><div class="chart-card" id="chart-luc"><div class="no-chart">Bar chart will appear here</div></div></div>
