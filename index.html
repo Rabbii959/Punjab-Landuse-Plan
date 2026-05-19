@@ -23,7 +23,7 @@ body{background:var(--bg);color:var(--text);font-family:Tahoma,Geneva,sans-serif
 /* ── HEADER (compact, with logos) ── */
 header{background:linear-gradient(135deg,var(--green-dark) 0%,var(--green-mid) 100%);padding:12px 28px;position:relative;overflow:hidden}
 header::after{content:'';position:absolute;right:-60px;top:-30px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
-.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;z-index:1}
+.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;position:relative;z-index:1}
 
 /* Logos */
 .header-logo{height:90px;width:auto;object-fit:contain;flex-shrink:0}
@@ -137,9 +137,9 @@ footer .f-sub{color:rgba(255,255,255,.75);font-size:12px;font-family:Tahoma,Gene
 <!-- TABS -->
 <div class="nav-wrap">
   <div class="nav-inner">
-     <div class="tab" onclick="switchTab('luc')">📊 Landuse Classification Summary</div>
-    <div class="tab active" onclick="switchTab('district')">🗺 Landuse Plan Summary</div>
-    <div class="tab" onclick="switchTab('zone')">🏷 Zone wise Summary</div>
+     <div class="tab" onclick="switchTab('luc')">📊 Landuse Classification Stats</div>
+    <div class="tab active" onclick="switchTab('district')">🗺 Landuse Plan Stats</div>
+    <div class="tab" onclick="switchTab('zone')">🏷 Zone Wise Stats</div>
     </div>
 </div>
 
