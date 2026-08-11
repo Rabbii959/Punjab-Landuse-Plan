@@ -74,6 +74,11 @@ select:focus{border-color:var(--green-mid);box-shadow:0 0 0 3px rgba(45,122,82,.
 .ms-search{width:100%;box-sizing:border-box;background:var(--white);border:1.5px solid var(--green-border);border-radius:6px;padding:7px 10px;font-family:Tahoma,Geneva,sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s}
 .ms-search:focus{border-color:var(--green-mid);box-shadow:0 0 0 3px rgba(45,122,82,.12)}
 .ms-empty{padding:14px 16px;font-size:12.5px;color:var(--text-dim);font-family:Tahoma,Geneva,sans-serif;text-align:center}
+.ms-narrow{min-width:170px}
+.ms-narrow .ms-toggle{min-width:170px}
+.ms-single-opt{padding:8px 16px;font-size:13.5px;color:var(--text);cursor:pointer;font-family:Tahoma,Geneva,sans-serif}
+.ms-single-opt:hover{background:var(--green-pale)}
+.ms-single-opt.ms-selected{background:var(--green-pale);color:var(--green-dark);font-weight:700}
 /* ── STATS ── */
 .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
 .stat-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:18px 24px;transition:border-color .2s,box-shadow .2s;box-shadow:var(--shadow)}
@@ -171,22 +176,29 @@ footer .f-sub{color:rgba(255,255,255,.75);font-size:10px;font-family:Tahoma,Gene
   <div class="panel active" id="panel-district">
     <div class="controls-bar">
       <span class="ctrl-label">View By</span>
-      <select id="lup-mode" onchange="toggleLUPMode()">
-        <option value="byDistrict">By District</option>
-        <option value="byZone">By Zone</option>
-      </select>
+      <div class="multiselect ms-narrow" id="ms-lupmode">
+        <button type="button" class="ms-toggle" id="ms-lupmode-toggle">
+          <span class="ms-toggle-text" id="ms-lupmode-toggle-text">By District</span>
+          <svg class="ms-caret" width="12" height="8" viewBox="0 0 12 8"><path d="M1 1l5 5 5-5" stroke="#2d7a52" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>
+        </button>
+        <div class="ms-panel" id="ms-lupmode-panel">
+          <div class="ms-search-wrap"><input type="text" class="ms-search" id="ms-lupmode-search" placeholder="Search…" onclick="event.stopPropagation()"></div>
+          <div class="ms-list" id="ms-lupmode-list"></div>
+          <div class="ms-empty" id="ms-lupmode-empty" style="display:none">No matches found.</div>
+        </div>
+      </div>
       <span class="ctrl-label" id="lup-select-label">Select District</span>
       <div class="multiselect" id="ms-district">
-        <button type="button" class="ms-toggle" id="ms-district-toggle" onclick="toggleDistrictPanel(event)">
+        <button type="button" class="ms-toggle" id="ms-district-toggle">
           <span class="ms-toggle-text" id="ms-district-toggle-text">All Districts</span>
           <svg class="ms-caret" width="12" height="8" viewBox="0 0 12 8"><path d="M1 1l5 5 5-5" stroke="#2d7a52" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>
         </button>
         <div class="ms-panel" id="ms-district-panel">
           <div class="ms-search-wrap">
-            <input type="text" class="ms-search" id="ms-district-search" placeholder="Search districts…" oninput="filterDistrictList()" onclick="event.stopPropagation()">
+            <input type="text" class="ms-search" id="ms-district-search" placeholder="Search districts…" onclick="event.stopPropagation()">
           </div>
           <label class="ms-option ms-all">
-            <input type="checkbox" id="ms-district-all" checked onchange="onSelectAllDistrictsChange()">
+            <input type="checkbox" id="ms-district-all">
             <span>Select All</span>
           </label>
           <div class="ms-divider"></div>
@@ -194,7 +206,24 @@ footer .f-sub{color:rgba(255,255,255,.75);font-size:10px;font-family:Tahoma,Gene
           <div class="ms-empty" id="ms-district-empty" style="display:none">No districts match your search.</div>
         </div>
       </div>
-      <select id="sel-zone" onchange="renderZone()" style="display:none"></select>
+      <div class="multiselect" id="ms-zone" style="display:none">
+        <button type="button" class="ms-toggle" id="ms-zone-toggle">
+          <span class="ms-toggle-text" id="ms-zone-toggle-text">All Land Uses</span>
+          <svg class="ms-caret" width="12" height="8" viewBox="0 0 12 8"><path d="M1 1l5 5 5-5" stroke="#2d7a52" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>
+        </button>
+        <div class="ms-panel" id="ms-zone-panel">
+          <div class="ms-search-wrap">
+            <input type="text" class="ms-search" id="ms-zone-search" placeholder="Search land uses…" onclick="event.stopPropagation()">
+          </div>
+          <label class="ms-option ms-all">
+            <input type="checkbox" id="ms-zone-all">
+            <span>Select All</span>
+          </label>
+          <div class="ms-divider"></div>
+          <div class="ms-list" id="ms-zone-list"></div>
+          <div class="ms-empty" id="ms-zone-empty" style="display:none">No land uses match your search.</div>
+        </div>
+      </div>
     </div>
     <div class="stats-row">
       <div class="stat-card green"><div class="stat-lbl" id="sd-lbl1">Zone Types</div><div class="stat-val" id="sd-zones">—</div></div>
@@ -207,13 +236,34 @@ footer .f-sub{color:rgba(255,255,255,.75);font-size:10px;font-family:Tahoma,Gene
   <div class="panel" id="panel-luc">
     <div class="controls-bar">
       <span class="ctrl-label">View By</span>
-      <select id="luc-mode" onchange="renderLUC()">
-        <option value="byDistrict">By District</option>
-        <option value="byClass">By LU Class</option>
-        <option value="byLandUse">By Land Use</option>
-      </select>
-      <span class="ctrl-label">Select</span>
-      <select id="sel-luc" onchange="renderLUC()"></select>
+      <div class="multiselect ms-narrow" id="ms-lucmode">
+        <button type="button" class="ms-toggle" id="ms-lucmode-toggle">
+          <span class="ms-toggle-text" id="ms-lucmode-toggle-text">By District</span>
+          <svg class="ms-caret" width="12" height="8" viewBox="0 0 12 8"><path d="M1 1l5 5 5-5" stroke="#2d7a52" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>
+        </button>
+        <div class="ms-panel" id="ms-lucmode-panel">
+          <div class="ms-search-wrap"><input type="text" class="ms-search" id="ms-lucmode-search" placeholder="Search…" onclick="event.stopPropagation()"></div>
+          <div class="ms-list" id="ms-lucmode-list"></div>
+          <div class="ms-empty" id="ms-lucmode-empty" style="display:none">No matches found.</div>
+        </div>
+      </div>
+      <span class="ctrl-label" id="luc-select-label">Select District</span>
+      <div class="multiselect" id="ms-luc">
+        <button type="button" class="ms-toggle" id="ms-luc-toggle">
+          <span class="ms-toggle-text" id="ms-luc-toggle-text">All Districts</span>
+          <svg class="ms-caret" width="12" height="8" viewBox="0 0 12 8"><path d="M1 1l5 5 5-5" stroke="#2d7a52" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>
+        </button>
+        <div class="ms-panel" id="ms-luc-panel">
+          <div class="ms-search-wrap"><input type="text" class="ms-search" id="ms-luc-search" placeholder="Search…" onclick="event.stopPropagation()"></div>
+          <label class="ms-option ms-all">
+            <input type="checkbox" id="ms-luc-all">
+            <span>Select All</span>
+          </label>
+          <div class="ms-divider"></div>
+          <div class="ms-list" id="ms-luc-list"></div>
+          <div class="ms-empty" id="ms-luc-empty" style="display:none">No matches found.</div>
+        </div>
+      </div>
     </div>
     <div class="stats-row">
       <div class="stat-card green"><div class="stat-lbl" id="luc-lbl1">Categories</div><div class="stat-val" id="luc-s1">—</div></div>
@@ -234,34 +284,213 @@ const lup = LUP_RAW.map(r=>({district:r.d,landuse:r.l,frequency:r.f,area:r.a}));
 const luc = LUC_RAW;
 const lupDistrictNames = [...new Set(lup.map(r=>r.district))].sort();
 const lupZones     = [...new Set(lup.map(r=>r.landuse))].sort();
-const lucDistricts = ['Punjab',...new Set(luc.map(r=>r.d))].sort((a,b)=>a==='Punjab'?-1:a.localeCompare(b));
+const lucDistrictNames = [...new Set(luc.map(r=>r.d))].sort();
 const lucClasses   = [...new Set(luc.map(r=>r.c))].sort();
 const lucLandUses  = [...new Set(luc.map(r=>r.l))].sort();
-let selectedDistricts = new Set(lupDistrictNames); // default: Select All
-populateDistrictMultiselect();
-updateDistrictToggleLabel();
-document.getElementById('sel-zone').innerHTML     = lupZones.map(z=>`<option value="${z}">${z}</option>`).join('');
-populateLUCSelect();
-function populateLUCSelect(){
-  const mode = document.getElementById('luc-mode').value;
-  let opts;
-  if(mode==='byDistrict'){
-    opts = lucDistricts;
-  }else if(mode==='byClass'){
-    opts = lucClasses;
-  }else{
-    opts = lucLandUses;
+const lupModeLabels = {byDistrict:'By District', byZone:'By Zone'};
+const lucModeLabels = {byDistrict:'By District', byClass:'By LU Class', byLandUse:'By Land Use'};
+const lucSelectLabels = {byDistrict:'Select District', byClass:'Select LU Class', byLandUse:'Select Land Use'};
+
+function fmt(n){return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fmtN(n){return Math.round(n).toLocaleString('en-US');}
+function escapeHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+/* ============================================================
+   Generic searchable dropdown component (supports single & multi select)
+   ============================================================ */
+const ms = {};
+const msOpenKeys = new Set();
+
+function msRegister(key, options, cfg){
+  cfg = cfg || {};
+  ms[key] = {
+    multi: !!cfg.multi,
+    options: options.slice(),
+    selected: cfg.multi ? new Set(cfg.initialSelected || options) : (cfg.initialSelected !== undefined ? cfg.initialSelected : options[0]),
+    onChange: cfg.onChange || function(){},
+    labelFor: cfg.labelFor || (v=>v),
+    allLabel: cfg.allLabel || 'All Selected'
+  };
+  const toggleBtn = document.getElementById(`ms-${key}-toggle`);
+  const searchInput = document.getElementById(`ms-${key}-search`);
+  const allCb = document.getElementById(`ms-${key}-all`);
+  const listEl = document.getElementById(`ms-${key}-list`);
+  if(toggleBtn) toggleBtn.addEventListener('click', function(e){ e.stopPropagation(); msTogglePanel(key); });
+  if(searchInput) searchInput.addEventListener('input', function(){ msFilterList(key); });
+  if(allCb) allCb.addEventListener('change', function(){ msOnSelectAllChange(key); });
+  if(listEl){
+    listEl.addEventListener('change', function(e){
+      if(e.target.classList && e.target.classList.contains('ms-cb')) msOnCheckboxChange(key, e.target);
+    });
+    listEl.addEventListener('click', function(e){
+      const opt = e.target.closest('.ms-single-opt');
+      if(opt) msSelectSingle(key, opt.getAttribute('data-value'));
+    });
   }
-  document.getElementById('sel-luc').innerHTML = opts.map(o=>`<option value="${o}">${o}</option>`).join('');
+  msRenderList(key);
+  msSyncAllCheckbox(key);
+  msUpdateToggleLabel(key);
 }
+
+function msSetOptions(key, newOptions, opts){
+  opts = opts || {};
+  const state = ms[key];
+  if(!state) return;
+  state.options = newOptions.slice();
+  if(state.multi){
+    state.selected = opts.selectAll===false ? new Set() : new Set(newOptions);
+  } else {
+    state.selected = opts.initialSelected !== undefined ? opts.initialSelected : newOptions[0];
+  }
+  msRenderList(key);
+  msSyncAllCheckbox(key);
+  msUpdateToggleLabel(key);
+}
+
+function msRenderList(key){
+  const state = ms[key];
+  const listEl = document.getElementById(`ms-${key}-list`);
+  if(!state || !listEl) return;
+  if(state.multi){
+    listEl.innerHTML = state.options.map(o=>{
+      const checked = state.selected.has(o) ? 'checked' : '';
+      return `<label class="ms-option"><input type="checkbox" class="ms-cb" value="${escapeHtml(o)}" ${checked}><span>${escapeHtml(state.labelFor(o))}</span></label>`;
+    }).join('');
+  } else {
+    listEl.innerHTML = state.options.map(o=>{
+      const isSel = state.selected === o;
+      return `<div class="ms-option ms-single-opt${isSel?' ms-selected':''}" data-value="${escapeHtml(o)}">${escapeHtml(state.labelFor(o))}</div>`;
+    }).join('');
+  }
+  msFilterList(key);
+}
+
+function msFilterList(key){
+  const searchInput = document.getElementById(`ms-${key}-search`);
+  const q = searchInput ? searchInput.value.trim().toLowerCase() : '';
+  const listEl = document.getElementById(`ms-${key}-list`);
+  if(!listEl) return;
+  const opts = [...listEl.querySelectorAll('.ms-option')];
+  let anyVisible = false;
+  opts.forEach(opt=>{
+    const label = opt.textContent.trim().toLowerCase();
+    const match = label.includes(q);
+    opt.style.display = match ? '' : 'none';
+    if(match) anyVisible = true;
+  });
+  const emptyEl = document.getElementById(`ms-${key}-empty`);
+  if(emptyEl) emptyEl.style.display = (anyVisible || !opts.length) ? 'none' : '';
+}
+
+function msSyncAllCheckbox(key){
+  const state = ms[key];
+  if(!state || !state.multi) return;
+  const allCb = document.getElementById(`ms-${key}-all`);
+  if(!allCb) return;
+  const n = state.selected.size;
+  allCb.checked = n === state.options.length && n>0;
+  allCb.indeterminate = n>0 && n<state.options.length;
+}
+
+function msOnCheckboxChange(key, cb){
+  const state = ms[key];
+  if(!state) return;
+  if(cb.checked) state.selected.add(cb.value); else state.selected.delete(cb.value);
+  msSyncAllCheckbox(key);
+  msUpdateToggleLabel(key);
+  state.onChange();
+}
+
+function msOnSelectAllChange(key){
+  const state = ms[key];
+  const allCb = document.getElementById(`ms-${key}-all`);
+  if(!state || !allCb) return;
+  const checked = allCb.checked;
+  allCb.indeterminate = false;
+  state.selected = checked ? new Set(state.options) : new Set();
+  document.querySelectorAll(`#ms-${key}-list .ms-cb`).forEach(cb=>{ cb.checked = checked; });
+  msUpdateToggleLabel(key);
+  state.onChange();
+}
+
+function msSelectSingle(key, value){
+  const state = ms[key];
+  if(!state) return;
+  state.selected = value;
+  msRenderList(key);
+  msUpdateToggleLabel(key);
+  msClosePanel(key);
+  state.onChange();
+}
+
+function msUpdateToggleLabel(key){
+  const state = ms[key];
+  const el = document.getElementById(`ms-${key}-toggle-text`);
+  if(!state || !el) return;
+  if(state.multi){
+    const n = state.selected.size;
+    if(n===0) el.textContent = 'None Selected';
+    else if(n===state.options.length) el.textContent = state.allLabel || 'All Selected';
+    else if(n===1) el.textContent = state.labelFor([...state.selected][0]);
+    else el.textContent = `${n} Selected`;
+  } else {
+    el.textContent = state.labelFor(state.selected);
+  }
+}
+
+function msGetSelected(key){
+  const state = ms[key];
+  if(!state) return null;
+  return state.multi ? [...state.selected] : state.selected;
+}
+
+function msOpenPanel(key){
+  const panel = document.getElementById(`ms-${key}-panel`);
+  const toggle = document.getElementById(`ms-${key}-toggle`);
+  if(panel) panel.classList.add('open');
+  if(toggle) toggle.classList.add('open');
+  msOpenKeys.add(key);
+  const search = document.getElementById(`ms-${key}-search`);
+  if(search){ search.value=''; msFilterList(key); search.focus(); }
+}
+function msClosePanel(key){
+  const panel = document.getElementById(`ms-${key}-panel`);
+  const toggle = document.getElementById(`ms-${key}-toggle`);
+  if(panel) panel.classList.remove('open');
+  if(toggle) toggle.classList.remove('open');
+  msOpenKeys.delete(key);
+}
+function msCloseAllPanels(){
+  [...msOpenKeys].forEach(k=>msClosePanel(k));
+}
+function msTogglePanel(key){
+  const panel = document.getElementById(`ms-${key}-panel`);
+  const isOpen = panel && panel.classList.contains('open');
+  msCloseAllPanels();
+  if(!isOpen){ msOpenPanel(key); }
+}
+document.addEventListener('click', function(e){
+  [...msOpenKeys].forEach(key=>{
+    const wrap = document.getElementById(`ms-${key}`);
+    if(wrap && !wrap.contains(e.target)){ msClosePanel(key); }
+  });
+});
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape'){ msCloseAllPanels(); }
+});
+
+/* ============================================================
+   Tabs
+   ============================================================ */
 function switchTab(name){
   const names=['district','luc'];
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
   names.forEach(n=>document.getElementById('panel-'+n).classList.toggle('active',n===name));
 }
-function fmt(n){return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
-function fmtN(n){return Math.round(n).toLocaleString('en-US');}
-function escapeHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+/* ============================================================
+   Chart / table builders
+   ============================================================ */
 function aggregateChartItems(items){
   const m={};
   items.forEach(it=>{
@@ -290,6 +519,20 @@ function buildBarChartCard(title, subtitle, items){
   }).join('');
   return `<div class="chart-title">${escapeHtml(title)}</div><div class="chart-sub">Top ${chartItems.length} records by area (acres)</div><svg class="bar-svg" viewBox="0 0 340 ${height}" aria-label="${escapeHtml(title)} bar chart">${rows}</svg><div class="chart-note">Values shown in acres.</div>`;
 }
+function buildTable(cols, colTypes, rows, totLabel, tf, ta){
+  const hdrs = cols.map((c,i)=>`<th class="${colTypes[i]==='l'?'th-left':'th-num'}">${c}</th>`).join('');
+  const body = rows.map((r,i)=>`<tr><td class="rn">${i+1}</td>${r.map((v,j)=>`<td class="${colTypes[j]==='l'?'td-left':'td-right'}">${v}</td>`).join('')}</tr>`).join('');
+  const tfootSpan = cols.length - 2;
+  return `<table>
+    <thead><tr><th class="rn">#</th>${hdrs}</tr></thead>
+    <tbody>${body}</tbody>
+    <tfoot><tr><td colspan="${tfootSpan+1}">${totLabel}</td><td class="td-right">${fmtN(tf)}</td><td class="td-right">${fmt(ta)}</td></tr></tfoot>
+  </table>`;
+}
+
+/* ============================================================
+   Land Use Plan (LUP) — aggregation helpers
+   ============================================================ */
 function aggByLanduse(){
   const m={};
   for(const r of lup){
@@ -308,109 +551,32 @@ function aggByLanduseForDistricts(districts){
   }
   return Object.values(m).sort((a,b)=>a.landuse.localeCompare(b.landuse));
 }
-function buildTable(cols, colTypes, rows, totLabel, tf, ta){
-  const hdrs = cols.map((c,i)=>`<th class="${colTypes[i]==='l'?'th-left':'th-num'}">${c}</th>`).join('');
-  const body = rows.map((r,i)=>`<tr><td class="rn">${i+1}</td>${r.map((v,j)=>`<td class="${colTypes[j]==='l'?'td-left':'td-right'}">${v}</td>`).join('')}</tr>`).join('');
-  const tfootSpan = cols.length - 2;
-  return `<table>
-    <thead><tr><th class="rn">#</th>${hdrs}</tr></thead>
-    <tbody>${body}</tbody>
-    <tfoot><tr><td colspan="${tfootSpan+1}">${totLabel}</td><td class="td-right">${fmtN(tf)}</td><td class="td-right">${fmt(ta)}</td></tr></tfoot>
-  </table>`;
-}
-/* ── District multi-select ── */
-function populateDistrictMultiselect(){
-  const list = document.getElementById('ms-district-list');
-  list.innerHTML = lupDistrictNames.map(d=>`<label class="ms-option"><input type="checkbox" class="ms-district-cb" value="${escapeHtml(d)}" onchange="onDistrictCheckboxChange()" checked><span>${escapeHtml(d)}</span></label>`).join('');
-}
-function onSelectAllDistrictsChange(){
-  const allCb = document.getElementById('ms-district-all');
-  const checked = allCb.checked;
-  allCb.indeterminate = false;
-  document.querySelectorAll('.ms-district-cb').forEach(cb=>cb.checked=checked);
-  selectedDistricts = checked ? new Set(lupDistrictNames) : new Set();
-  updateDistrictToggleLabel();
-  renderDistrict();
-}
-function onDistrictCheckboxChange(){
-  const cbs = [...document.querySelectorAll('.ms-district-cb')];
-  const checked = cbs.filter(cb=>cb.checked).map(cb=>cb.value);
-  selectedDistricts = new Set(checked);
-  const allCb = document.getElementById('ms-district-all');
-  allCb.checked = checked.length === lupDistrictNames.length;
-  allCb.indeterminate = checked.length>0 && checked.length<lupDistrictNames.length;
-  updateDistrictToggleLabel();
-  renderDistrict();
-}
-function updateDistrictToggleLabel(){
-  const n = selectedDistricts.size;
-  const el = document.getElementById('ms-district-toggle-text');
-  if(!el) return;
-  if(n===0) el.textContent = 'No District Selected';
-  else if(n===lupDistrictNames.length) el.textContent = 'All Districts';
-  else if(n===1) el.textContent = [...selectedDistricts][0];
-  else el.textContent = `${n} Districts Selected`;
-}
-function filterDistrictList(){
-  const searchEl = document.getElementById('ms-district-search');
-  const q = searchEl ? searchEl.value.trim().toLowerCase() : '';
-  const opts = [...document.querySelectorAll('#ms-district-list .ms-option')];
-  let anyVisible = false;
-  opts.forEach(opt=>{
-    const label = opt.textContent.trim().toLowerCase();
-    const match = label.includes(q);
-    opt.style.display = match ? '' : 'none';
-    if(match) anyVisible = true;
-  });
-  const emptyEl = document.getElementById('ms-district-empty');
-  if(emptyEl) emptyEl.style.display = (anyVisible || !opts.length) ? 'none' : '';
-}
-function openDistrictPanel(){
-  const panel = document.getElementById('ms-district-panel');
-  const toggle = document.getElementById('ms-district-toggle');
-  if(panel) panel.classList.add('open');
-  if(toggle) toggle.classList.add('open');
-  const search = document.getElementById('ms-district-search');
-  if(search){ search.value=''; filterDistrictList(); search.focus(); }
-}
-function closeDistrictPanel(){
-  const panel = document.getElementById('ms-district-panel');
-  const toggle = document.getElementById('ms-district-toggle');
-  if(panel) panel.classList.remove('open');
-  if(toggle) toggle.classList.remove('open');
-}
-function toggleDistrictPanel(e){
-  e.stopPropagation();
-  const panel = document.getElementById('ms-district-panel');
-  const isOpen = panel.classList.contains('open');
-  if(isOpen){ closeDistrictPanel(); } else { openDistrictPanel(); }
-}
-document.addEventListener('click', function(e){
-  const ms = document.getElementById('ms-district');
-  if(ms && !ms.contains(e.target)){
-    closeDistrictPanel();
+function aggByDistrictForZones(zones){
+  const set = zones instanceof Set ? zones : new Set(zones);
+  const m={};
+  for(const r of lup){
+    if(!set.has(r.landuse)) continue;
+    if(!m[r.district])m[r.district]={district:r.district,frequency:0,area:0};
+    m[r.district].frequency+=r.frequency; m[r.district].area+=r.area;
   }
-});
-document.addEventListener('keydown', function(e){
-  if(e.key === 'Escape'){
-    closeDistrictPanel();
-  }
-});
-function toggleLUPMode(){
-  const mode = document.getElementById('lup-mode').value;
+  return Object.values(m).sort((a,b)=>a.district.localeCompare(b.district));
+}
+
+/* ============================================================
+   Land Use Plan (LUP) mode/selection handlers
+   ============================================================ */
+function onLupModeChange(){
+  const mode = msGetSelected('lupmode');
   const isDistrict = mode === 'byDistrict';
-  document.getElementById('lup-select-label').textContent = isDistrict ? 'Select District' : 'Select Zone';
+  document.getElementById('lup-select-label').textContent = isDistrict ? 'Select District' : 'Select Land Use';
   document.getElementById('ms-district').style.display = isDistrict ? '' : 'none';
-  document.getElementById('sel-zone').style.display = isDistrict ? 'none' : '';
-  if(isDistrict){
-    renderDistrict();
-  }else{
-    renderZone();
-  }
+  document.getElementById('ms-zone').style.display = isDistrict ? 'none' : '';
+  if(isDistrict) renderDistrict(); else renderZone();
 }
+
 function renderDistrict(){
   document.getElementById('sd-lbl1').textContent='Zone Types';
-  const selected = [...selectedDistricts];
+  const selected = msGetSelected('district') || [];
   let rows, label;
   if(selected.length===0){
     rows=[];
@@ -434,38 +600,76 @@ function renderDistrict(){
     : '<div class="msg">No data. Select at least one district.</div>';
   document.getElementById('chart-district').innerHTML = buildBarChartCard(`Land Use Distribution — ${label}`, 'Top land use zones by area', rows.map(r=>({label:r.landuse,value:r.area})));
 }
+
 function renderZone(){
   document.getElementById('sd-lbl1').textContent='Districts';
-  const sel=document.getElementById('sel-zone').value;
-  const rows=lup.filter(r=>r.landuse===sel);
+  const selected = msGetSelected('zone') || [];
+  let rows, label;
+  if(selected.length===0){
+    rows=[];
+    label='No Land Use Selected';
+  } else if(selected.length===1){
+    rows = lup.filter(r=>r.landuse===selected[0]);
+    label = selected[0];
+  } else if(selected.length===lupZones.length){
+    rows = aggByDistrictForZones(lupZones);
+    label = 'All Land Uses';
+  } else {
+    rows = aggByDistrictForZones(selected);
+    label = `${selected.length} Selected Land Uses`;
+  }
   const tf=rows.reduce((s,r)=>s+r.frequency,0), ta=rows.reduce((s,r)=>s+r.area,0);
   document.getElementById('sd-zones').textContent=rows.length;
   document.getElementById('sd-count').textContent=fmtN(tf);
   document.getElementById('sd-area').innerHTML=`${fmt(ta)}<span class="stat-unit">acres</span>`;
   document.getElementById('tbl-district').innerHTML = rows.length
-    ? buildTable(['District','No.','Area (acres)'],['l','r','r'],rows.map(r=>[r.district,fmtN(r.frequency),fmt(r.area)]),`TOTAL — ${sel}`,tf,ta)
-    : '<div class="msg">No data.</div>';
-  document.getElementById('chart-district').innerHTML = buildBarChartCard(`Zone Wise Distribution — ${sel}`, 'Top districts by area', rows.map(r=>({label:r.district,value:r.area})));
+    ? buildTable(['District','No.','Area (acres)'],['l','r','r'],rows.map(r=>[r.district,fmtN(r.frequency),fmt(r.area)]),`TOTAL — ${label}`,tf,ta)
+    : '<div class="msg">No data. Select at least one land use.</div>';
+  document.getElementById('chart-district').innerHTML = buildBarChartCard(`Zone Wise Distribution — ${label}`, 'Top districts by area', rows.map(r=>({label:r.district,value:r.area})));
 }
-document.getElementById('luc-mode').onchange = function(){ populateLUCSelect(); renderLUC(); };
+
+/* ============================================================
+   Land Use Classification (LUC) mode/selection handlers
+   ============================================================ */
+function onLucModeChange(){
+  const mode = msGetSelected('lucmode');
+  let newOptions;
+  if(mode==='byDistrict') newOptions = lucDistrictNames;
+  else if(mode==='byClass') newOptions = lucClasses;
+  else newOptions = lucLandUses;
+  document.getElementById('luc-select-label').textContent = lucSelectLabels[mode] || 'Select';
+  msSetOptions('luc', newOptions, {selectAll:true});
+  renderLUC();
+}
+
 function renderLUC(){
-  const mode=document.getElementById('luc-mode').value;
-  const sel =document.getElementById('sel-luc').value;
-  let rows;
+  const mode = msGetSelected('lucmode');
+  const selected = msGetSelected('luc') || [];
+  const selSet = new Set(selected);
+  const totalOptions = ms['luc'] ? ms['luc'].options.length : 0;
+  let fieldKey;
+  if(mode==='byDistrict'){ fieldKey='d'; document.getElementById('luc-lbl1').textContent='Land Use Categories'; }
+  else if(mode==='byClass'){ fieldKey='c'; document.getElementById('luc-lbl1').textContent='Districts'; }
+  else { fieldKey='l'; document.getElementById('luc-lbl1').textContent='Districts'; }
+
+  let rows, label;
+  if(selected.length===0){
+    rows=[];
+    label='None Selected';
+  } else {
+    rows = luc.filter(r=>selSet.has(r[fieldKey]));
+    if(selected.length===1) label = selected[0];
+    else if(selected.length===totalOptions) label = 'All';
+    else label = `${selected.length} Selected`;
+  }
+  rows = rows.slice().sort((a,b)=>a.d.localeCompare(b.d)||a.c.localeCompare(b.c)||a.l.localeCompare(b.l));
+
   if(mode==='byDistrict'){
-    rows = sel==='Punjab' ? [...luc] : luc.filter(r=>r.d===sel);
-    document.getElementById('luc-lbl1').textContent='Land Use Categories';
     document.getElementById('luc-s1').textContent=[...new Set(rows.map(r=>r.l))].length;
-  }else if(mode==='byClass'){
-    rows = luc.filter(r=>r.c===sel);
-    document.getElementById('luc-lbl1').textContent='Districts';
-    document.getElementById('luc-s1').textContent=[...new Set(rows.map(r=>r.d))].length;
   }else{
-    rows = luc.filter(r=>r.l===sel);
-    document.getElementById('luc-lbl1').textContent='Districts';
     document.getElementById('luc-s1').textContent=[...new Set(rows.map(r=>r.d))].length;
   }
-  rows.sort((a,b)=>a.d.localeCompare(b.d)||a.c.localeCompare(b.c)||a.l.localeCompare(b.l));
+
   const tf=rows.reduce((s,r)=>s+r.n,0), ta=rows.reduce((s,r)=>s+r.a,0);
   document.getElementById('luc-s2').textContent=fmtN(tf);
   document.getElementById('luc-s3').innerHTML=`${fmt(ta)}<span class="stat-unit">acres</span>`;
@@ -474,22 +678,59 @@ function renderLUC(){
         ['District','LU Class','Land Use','No.','Area (acres)'],
         ['l','l','l','r','r'],
         rows.map(r=>[r.d, r.c, r.l, fmtN(r.n), fmt(r.a)]),
-        `TOTAL — ${sel}`, tf, ta
+        `TOTAL — ${label}`, tf, ta
       )
-    : '<div class="msg">No data found.</div>';
+    : '<div class="msg">No data found. Select at least one option.</div>';
   const chartLabel = mode==='byDistrict' ? 'l' : 'd';
   const chartTitle = mode==='byDistrict'
-    ? `Land Use Classification — ${sel}`
+    ? `Land Use Classification — ${label}`
     : mode==='byClass'
-      ? `LU Class Distribution — ${sel}`
-      : `Land Use Distribution — ${sel}`;
+      ? `LU Class Distribution — ${label}`
+      : `Land Use Distribution — ${label}`;
   document.getElementById('chart-luc').innerHTML = buildBarChartCard(
     chartTitle,
     mode==='byDistrict' ? 'Top land uses by area' : 'Top districts by area',
     rows.map(r=>({label:r[chartLabel], value:r.a}))
   );
 }
-renderDistrict(); renderLUC();
+
+/* ============================================================
+   Register all dropdowns
+   ============================================================ */
+msRegister('lupmode', ['byDistrict','byZone'], {
+  multi:false,
+  initialSelected:'byDistrict',
+  labelFor: v=>lupModeLabels[v]||v,
+  onChange: onLupModeChange
+});
+msRegister('district', lupDistrictNames, {
+  multi:true,
+  initialSelected: lupDistrictNames,
+  allLabel: 'All Districts',
+  onChange: renderDistrict
+});
+msRegister('zone', lupZones, {
+  multi:true,
+  initialSelected: lupZones,
+  allLabel: 'All Land Uses',
+  onChange: renderZone
+});
+msRegister('lucmode', ['byDistrict','byClass','byLandUse'], {
+  multi:false,
+  initialSelected:'byDistrict',
+  labelFor: v=>lucModeLabels[v]||v,
+  onChange: onLucModeChange
+});
+msRegister('luc', lucDistrictNames, {
+  multi:true,
+  initialSelected: lucDistrictNames,
+  allLabel: 'All',
+  onChange: renderLUC
+});
+
+renderDistrict();
+renderLUC();
+
 // Set body padding to match fixed header height
 function setTopPadding(){
   const h = document.querySelector('.fixed-top').offsetHeight;
