@@ -70,6 +70,10 @@ select:focus{border-color:var(--green-mid);box-shadow:0 0 0 3px rgba(45,122,82,.
 .ms-option.ms-all{font-weight:700;color:var(--green-dark)}
 .ms-divider{height:1px;background:var(--border);margin:4px 0;flex-shrink:0}
 .ms-list{overflow-y:auto;flex:1}
+.ms-search-wrap{padding:2px 12px 8px;flex-shrink:0}
+.ms-search{width:100%;box-sizing:border-box;background:var(--white);border:1.5px solid var(--green-border);border-radius:6px;padding:7px 10px;font-family:Tahoma,Geneva,sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s}
+.ms-search:focus{border-color:var(--green-mid);box-shadow:0 0 0 3px rgba(45,122,82,.12)}
+.ms-empty{padding:14px 16px;font-size:12.5px;color:var(--text-dim);font-family:Tahoma,Geneva,sans-serif;text-align:center}
 /* ── STATS ── */
 .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
 .stat-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:18px 24px;transition:border-color .2s,box-shadow .2s;box-shadow:var(--shadow)}
@@ -178,12 +182,16 @@ footer .f-sub{color:rgba(255,255,255,.75);font-size:10px;font-family:Tahoma,Gene
           <svg class="ms-caret" width="12" height="8" viewBox="0 0 12 8"><path d="M1 1l5 5 5-5" stroke="#2d7a52" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>
         </button>
         <div class="ms-panel" id="ms-district-panel">
+          <div class="ms-search-wrap">
+            <input type="text" class="ms-search" id="ms-district-search" placeholder="Search districts…" oninput="filterDistrictList()" onclick="event.stopPropagation()">
+          </div>
           <label class="ms-option ms-all">
             <input type="checkbox" id="ms-district-all" checked onchange="onSelectAllDistrictsChange()">
             <span>Select All</span>
           </label>
           <div class="ms-divider"></div>
           <div class="ms-list" id="ms-district-list"></div>
+          <div class="ms-empty" id="ms-district-empty" style="display:none">No districts match your search.</div>
         </div>
       </div>
       <select id="sel-zone" onchange="renderZone()" style="display:none"></select>
@@ -343,27 +351,49 @@ function updateDistrictToggleLabel(){
   else if(n===1) el.textContent = [...selectedDistricts][0];
   else el.textContent = `${n} Districts Selected`;
 }
+function filterDistrictList(){
+  const searchEl = document.getElementById('ms-district-search');
+  const q = searchEl ? searchEl.value.trim().toLowerCase() : '';
+  const opts = [...document.querySelectorAll('#ms-district-list .ms-option')];
+  let anyVisible = false;
+  opts.forEach(opt=>{
+    const label = opt.textContent.trim().toLowerCase();
+    const match = label.includes(q);
+    opt.style.display = match ? '' : 'none';
+    if(match) anyVisible = true;
+  });
+  const emptyEl = document.getElementById('ms-district-empty');
+  if(emptyEl) emptyEl.style.display = (anyVisible || !opts.length) ? 'none' : '';
+}
+function openDistrictPanel(){
+  const panel = document.getElementById('ms-district-panel');
+  const toggle = document.getElementById('ms-district-toggle');
+  if(panel) panel.classList.add('open');
+  if(toggle) toggle.classList.add('open');
+  const search = document.getElementById('ms-district-search');
+  if(search){ search.value=''; filterDistrictList(); search.focus(); }
+}
+function closeDistrictPanel(){
+  const panel = document.getElementById('ms-district-panel');
+  const toggle = document.getElementById('ms-district-toggle');
+  if(panel) panel.classList.remove('open');
+  if(toggle) toggle.classList.remove('open');
+}
 function toggleDistrictPanel(e){
   e.stopPropagation();
   const panel = document.getElementById('ms-district-panel');
-  const toggle = document.getElementById('ms-district-toggle');
   const isOpen = panel.classList.contains('open');
-  panel.classList.toggle('open', !isOpen);
-  toggle.classList.toggle('open', !isOpen);
+  if(isOpen){ closeDistrictPanel(); } else { openDistrictPanel(); }
 }
 document.addEventListener('click', function(e){
   const ms = document.getElementById('ms-district');
   if(ms && !ms.contains(e.target)){
-    document.getElementById('ms-district-panel').classList.remove('open');
-    document.getElementById('ms-district-toggle').classList.remove('open');
+    closeDistrictPanel();
   }
 });
 document.addEventListener('keydown', function(e){
   if(e.key === 'Escape'){
-    const panel = document.getElementById('ms-district-panel');
-    const toggle = document.getElementById('ms-district-toggle');
-    if(panel){ panel.classList.remove('open'); }
-    if(toggle){ toggle.classList.remove('open'); }
+    closeDistrictPanel();
   }
 });
 function toggleLUPMode(){
