@@ -234,6 +234,7 @@ const lucDistricts = ['Punjab',...new Set(luc.map(r=>r.d))].sort((a,b)=>a==='Pun
 const lucClasses   = [...new Set(luc.map(r=>r.c))].sort();
 const lucLandUses  = [...new Set(luc.map(r=>r.l))].sort();
 initDistrictMultiSelect();
+renderDistrict();
 document.getElementById('sel-zone').innerHTML     = lupZones.map(z=>`<option value="${z}">${z}</option>`).join('');
 populateLUCSelect();
 
